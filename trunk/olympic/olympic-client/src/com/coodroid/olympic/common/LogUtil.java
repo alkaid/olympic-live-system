@@ -11,7 +11,7 @@ import android.util.Log;
 public class LogUtil {
 	private static final String TAG="alkaid";
 	/** 是否允许输出debug日志 包括Log.d() Log.v() Log.i() Log.w()*/
-	private static final boolean D=false;
+	private static final boolean D=true;
 	/** 是否允许输出error日志 包括Log.e()*/
 	private static final boolean E=true;
 	public static int v(String msg) {
