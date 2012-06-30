@@ -17,6 +17,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.coodroid.olympic.R;
+
+import android.content.Context;
 import android.os.Environment;
 
 /**
@@ -185,4 +188,6 @@ public class IOUtil {
 		}
 		return map;
 	}
+	
+
 }

@@ -1,5 +1,7 @@
 package com.coodroid.olympic.common;
 
+import java.io.InputStream;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -60,4 +62,5 @@ public class SystemUtil {
 		sb.append(Build.MODEL).append("  ").append(Build.VERSION.RELEASE);//SDK
 		return sb.toString();
 	}
+
 }
