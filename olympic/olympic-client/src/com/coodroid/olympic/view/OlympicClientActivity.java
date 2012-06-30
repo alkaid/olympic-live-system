@@ -23,7 +23,7 @@ public class OlympicClientActivity extends Activity {
     
     public void getData(){
     	try {
-			String url = "http://127.0.0.1/ocdemo/index.php?route=olympic/medal"; 
+			String url = "http://coodroid.com/ocdemo/index.php?route=olympic/medal"; 
 			HttpUtils.setConnectionTimeout(3000);
 			HttpUtils.setRetryCount(0);
 			Map<String, String> params = new HashMap<String, String>();
@@ -31,7 +31,7 @@ public class OlympicClientActivity extends Activity {
 			params.put("l", "10");
 			params.put("v","0");
 			String data = HttpUtils.getContent(url, "GET", params, "utf-8");
-			LogUtil.d(data);
+			LogUtil.i(data);
 		} catch (MalformedURLException e) {
 			LogUtil.e(e);
 		} catch (IOException e) {
