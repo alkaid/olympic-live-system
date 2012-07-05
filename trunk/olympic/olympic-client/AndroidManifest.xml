@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.MedalActivity" />
+        <activity android:name=".view.MatchActivity" />
+        <activity android:name=".view.LiveActivity" />
+        <activity android:name=".view.GuessActivity" />
+        <activity android:name=".view.MoreActivity" />
     </application>
 	<uses-permission android:name="android.permission.INTERNET" />    
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

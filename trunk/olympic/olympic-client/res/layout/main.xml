@@ -1,12 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/hello" />
-
+    android:layout_width="fill_parent" android:orientation="vertical"
+    android:layout_height="fill_parent">
+    <!-- 中间动态加载View -->
+    <ScrollView android:measureAllChildren="true" android:id="@+id/containerBody"
+        android:layout_weight="1" android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
+    </ScrollView>
+    <LinearLayout android:background="@android:color/black"
+        android:layout_gravity="bottom" android:orientation="horizontal"
+        android:layout_width="fill_parent" android:layout_height="wrap_content">
+        
+        <!-- 奖牌榜模块按钮 -->
+        <RelativeLayout android:id="@+id/btnMedal" android:background="@android:color/background_light"
+            android:layout_marginLeft="7dp" android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp" android:layout_width="wrap_content" android:layout_weight="1"
+            android:layout_height="wrap_content" android:gravity="center_horizontal">          
+            <ImageView android:id="@+id/imgMedal" android:src="@android:drawable/btn_radio"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:id="@+id/txtMedal"  android:text="奖牌榜" android:gravity="center_horizontal"
+                android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/imgMedal"/>
+        </RelativeLayout>
+        
+		<!-- 赛程表模块按钮 -->
+        <RelativeLayout android:id="@+id/btnMatch" android:background="@android:color/background_light"
+            android:layout_marginLeft="7dp" android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp" android:layout_width="wrap_content" android:layout_weight="1"
+            android:layout_height="wrap_content" android:gravity="center_horizontal">
+            <ImageView android:id="@+id/imgMatch" android:src="@android:drawable/btn_radio" 
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:id="@+id/txtMatch"  android:text="赛程表" android:gravity="center_horizontal"
+                android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/imgMatch"/>
+        </RelativeLayout>
+        
+       	<!-- 直播吧模块按钮 -->
+        <RelativeLayout android:id="@+id/btnLive" android:background="@android:color/background_light"
+            android:layout_marginLeft="7dp" android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp" android:layout_width="wrap_content" android:layout_weight="1"
+            android:layout_height="wrap_content" android:gravity="center_horizontal">
+            <ImageView android:id="@+id/imgLive" android:src="@android:drawable/btn_radio" 
+                android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            <TextView android:id="@+id/txtLive"  android:text="直播吧" android:gravity="center_horizontal"
+                android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/imgLive"/>
+        </RelativeLayout>
+        
+        <!-- 藏宝阁模块按钮 -->
+        <RelativeLayout android:id="@+id/btnGuess" android:background="@android:color/background_light"
+            android:layout_marginLeft="7dp" android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp" android:layout_width="wrap_content" android:layout_weight="1"
+            android:layout_height="wrap_content" android:gravity="center_horizontal">
+            <ImageView android:id="@+id/imgGuess" android:src="@android:drawable/btn_radio" 
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:id="@+id/txtGuess"  android:text="藏宝阁" android:gravity="center_horizontal"
+                android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/imgGuess"/>
+        </RelativeLayout>
+        
+        <!-- 更多模块按钮 -->
+        <RelativeLayout android:id="@+id/btnMore" android:background="@android:color/background_light"
+            android:layout_marginLeft="7dp" android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp" android:layout_width="wrap_content" android:layout_weight="1"
+            android:layout_height="wrap_content" android:gravity="center_horizontal">
+            <ImageView android:id="@+id/imgMore" android:src="@android:drawable/btn_radio" 
+                android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:id="@+id/txtMore"  android:text="更多" android:gravity="center_horizontal"
+                android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/imgMore"/>
+        </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>
