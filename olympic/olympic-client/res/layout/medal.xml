@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    <LinearLayout android:gravity="center_horizontal"  android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:background="@android:color/darker_gray">
+        <TextView android:id="@+id/cust_title" android:textColor="@android:color/white"
+            android:textSize="28sp" android:text="奖牌榜" android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+	<LinearLayout 
+        xmlns:android="http://schemas.android.com/apk/res/android" 
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal" > 
+        <TextView 
+            android:layout_width="50dp" 
+            android:layout_height="30dp" 
+            android:gravity="center_horizontal" 
+            android:text="排名" 
+            android:textSize="15sp" /> 
+        <TextView 
+            android:layout_width="80dp" 
+            android:layout_height="30dp" 
+            android:gravity="center_horizontal" 
+            android:text="国家/地区" 
+            android:textSize="15sp" /> 
+        <TextView 
+            android:layout_width="50dp" 
+            android:layout_height="30dp" 
+            android:gravity="center_horizontal" 
+            android:text="金牌" 
+            android:textSize="15sp" /> 
+        <TextView 
+            android:layout_width="50dp" 
+            android:layout_height="30dp" 
+            android:gravity="center_horizontal" 
+            android:text="银牌" 
+            android:textSize="15sp" /> 
+        <TextView 
+            android:layout_width="50dp" 
+            android:layout_height="30dp" 
+            android:gravity="center_horizontal" 
+            android:text="铜牌" 
+            android:textSize="15sp" /> 
+        <TextView 
+            android:layout_width="50dp" 
+            android:layout_height="30dp" 
+            android:gravity="center_horizontal" 
+            android:text="总数" 
+            android:textSize="15sp" />
+    </LinearLayout>
+    
+    <ListView android:id="@+id/medalTable"
+       android:layout_width="fill_parent" android:layout_height="wrap_content"
+       android:scrollbars="vertical"> 
+    </ListView> 
+    
+</LinearLayout>
