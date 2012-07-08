@@ -20,12 +20,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 public class OlympicClientActivity extends ActivityGroup {
 	
-	private ScrollView container = null;
+	private LinearLayout container = null;
 	private RelativeLayout medalBtn = null;
 	private RelativeLayout matchBtn = null;
 	private RelativeLayout liveBtn = null;
@@ -39,6 +40,7 @@ public class OlympicClientActivity extends ActivityGroup {
         //隐藏标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //设置视图
+        getData();
         setContentView(R.layout.main);
         init();
     }
@@ -72,9 +74,9 @@ public class OlympicClientActivity extends ActivityGroup {
      * findViewByIds
      */
     private void findViewByIds(){
-    	  container = (ScrollView) findViewById(R.id.containerBody);
+    	  container = (LinearLayout) findViewById(R.id.containerBody);
     	  medalBtn = (RelativeLayout) findViewById(R.id.btnMedal);
-    	  matchBtn = (RelativeLayout) findViewById(R.id.btnMedal);
+    	  matchBtn = (RelativeLayout) findViewById(R.id.btnMatch);
     	  liveBtn = (RelativeLayout) findViewById(R.id.btnLive);
     	  guessBtn = (RelativeLayout) findViewById(R.id.btnGuess);
     	  moreBtn = (RelativeLayout) findViewById(R.id.btnMore);
@@ -88,9 +90,11 @@ public class OlympicClientActivity extends ActivityGroup {
     	medalBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				container.removeAllViews();
 				container.addView(OlympicClientActivity.this.
 						getLocalActivityManager().startActivity("MedalActivity", 
-								new Intent(OlympicClientActivity.this,MedalActivity.class))
+								new Intent(OlympicClientActivity.this,MedalActivity.class).
+								addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))								
 								.getDecorView());
 			}
 		});
@@ -99,9 +103,12 @@ public class OlympicClientActivity extends ActivityGroup {
     	matchBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				container.removeAllViews();
+				LogUtil.i("Match is onclick");
 				container.addView(OlympicClientActivity.this.
 						getLocalActivityManager().startActivity("MatchActivity", 
-								new Intent(OlympicClientActivity.this,MedalActivity.class))
+								new Intent(OlympicClientActivity.this,MatchActivity.class)
+								.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
 								.getDecorView());
 			}
 		});
@@ -110,9 +117,10 @@ public class OlympicClientActivity extends ActivityGroup {
     	liveBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				container.removeAllViews();
 				container.addView(OlympicClientActivity.this.
 						getLocalActivityManager().startActivity("LiveActivity", 
-								new Intent(OlympicClientActivity.this,MedalActivity.class))
+								new Intent(OlympicClientActivity.this,LiveActivity.class))
 								.getDecorView());
 			}
 		});
@@ -121,9 +129,10 @@ public class OlympicClientActivity extends ActivityGroup {
     	guessBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				container.removeAllViews();
 				container.addView(OlympicClientActivity.this.
 						getLocalActivityManager().startActivity("GuessActivity", 
-								new Intent(OlympicClientActivity.this,MedalActivity.class))
+								new Intent(OlympicClientActivity.this,GuessActivity.class))
 								.getDecorView());
 			}
 		});
@@ -132,9 +141,10 @@ public class OlympicClientActivity extends ActivityGroup {
     	moreBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				container.removeAllViews();
 				container.addView(OlympicClientActivity.this.
 						getLocalActivityManager().startActivity("MoreActivity", 
-								new Intent(OlympicClientActivity.this,MedalActivity.class))
+								new Intent(OlympicClientActivity.this,MoreActivity.class))
 								.getDecorView());
 			}
 		});
@@ -147,21 +157,21 @@ public class OlympicClientActivity extends ActivityGroup {
     
     
     
-//    public void getData(){
-//    	try {
-//			String url = "http://coodroid.com/ocdemo/index.php?route=olympic/medal"; 
-//			HttpUtils.setConnectionTimeout(3000);
-//			HttpUtils.setRetryCount(0);
-//			Map<String, String> params = new HashMap<String, String>();
+    public void getData(){
+    	try {
+			String url = "http://coodroid.com/ocdemo/index.php?route=olympic/match"; 
+			HttpUtils.setConnectionTimeout(3000);
+			HttpUtils.setRetryCount(0);
+			Map<String, String> params = new HashMap<String, String>();
 //			params.put("p1", "0");
 //			params.put("l", "10");
 //			params.put("v","0");
-//			String data = HttpUtils.getContent(url, "GET", params, "utf-8");
-//			LogUtil.i(data);
-//		} catch (MalformedURLException e) {
-//			LogUtil.e(e);
-//		} catch (IOException e) {
-//			LogUtil.e(e);
-//		}
-//    }
+			String data = HttpUtils.getContent(url, "GET", params, "utf-8");
+			LogUtil.i(data);
+		} catch (MalformedURLException e) {
+			LogUtil.e(e);
+		} catch (IOException e) {
+			LogUtil.e(e);
+		}
+    }
 }

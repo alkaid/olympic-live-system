@@ -1,4 +1,7 @@
 package com.coodroid.olympic.model;
+
+import java.util.Date;
+
 /**
  * 具体比赛的实体类
  * @author Cater
@@ -7,8 +10,14 @@ package com.coodroid.olympic.model;
 public class Match {
 	/** 比赛所对应的ID*/
 	private int id;
-	/** 什么时候开始比赛*/
-	private String datetime;
+	/** 比赛日期(北京时间)*/
+	private String bjDate;
+	/** 比赛时间(北京时间)*/
+	private String bjTime;
+	/** 比赛日期(伦敦时间)*/
+	private String londonDate;
+	/** 比赛时间(伦敦时间)*/
+	private String londonTime;
 	/** 比赛的详细名称*/
 	private String name;
 	/** 是否有文字直播*/
@@ -27,12 +36,39 @@ public class Match {
 	public int getId() {
 		return id;
 	}
-	public String getDatetime() {
-		return datetime;
+	
+	public String getBjDate() {
+		return bjDate;
 	}
-	public void setDatetime(String datetime) {
-		this.datetime = datetime;
+
+	public void setBjDate(String bjDate) {
+		this.bjDate = bjDate;
 	}
+
+	public String getBjTime() {
+		return bjTime;
+	}
+
+	public void setBjTime(String bjTime) {
+		this.bjTime = bjTime;
+	}
+
+	public String getLondonDate() {
+		return londonDate;
+	}
+
+	public void setLondonDate(String londonDate) {
+		this.londonDate = londonDate;
+	}
+
+	public String getLondonTime() {
+		return londonTime;
+	}
+
+	public void setLondonTime(String londonTime) {
+		this.londonTime = londonTime;
+	}
+
 	public String getName() {
 		return name;
 	}

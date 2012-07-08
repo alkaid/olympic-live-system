@@ -3,10 +3,10 @@
     android:layout_width="fill_parent" android:orientation="vertical"
     android:layout_height="fill_parent">
     <!-- 中间动态加载View -->
-    <ScrollView android:measureAllChildren="true" android:id="@+id/containerBody"
+    <LinearLayout android:measureAllChildren="true" android:id="@+id/containerBody"
         android:layout_weight="1" android:layout_height="fill_parent"
         android:layout_width="fill_parent">
-    </ScrollView>
+    </LinearLayout>
     <LinearLayout android:background="@android:color/black"
         android:layout_gravity="bottom" android:orientation="horizontal"
         android:layout_width="fill_parent" android:layout_height="wrap_content">

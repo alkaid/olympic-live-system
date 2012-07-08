@@ -112,7 +112,7 @@ public class MedalActivity extends Activity{
 				JSONArray medalArray = medalJSON.getJSONArray("data");
 				for(int i=0;i<medalArray.length();i++){
 					JSONObject medalObject = (JSONObject) medalArray.opt(i);
-					Medal m = new Medal(Integer.parseInt(medalObject.getString("id")));
+					Medal m = new Medal(medalObject.getString("id"));
 					m.setRanking(Integer.parseInt(medalObject.getString("ranking")));
 					m.setSimpleName(medalObject.getString("simpleName"));
 					m.setGold(Integer.parseInt(medalObject.getString("gold")));

@@ -51,8 +51,8 @@ public class MedalDBDAO{
 	public void update(Medal medal){
 		List<String> updates = new ArrayList<String>();
 		List<String> matchs = new ArrayList<String>();
-		matchs.add("_id="+medal.getId());
-		updates.add("_id="+medal.getId());
+		matchs.add("_id="+"'"+medal.getId()+"'");
+		updates.add("_id="+"'"+medal.getId()+"'");
 		if(medal.getRanking()!=-1){
 			updates.add("_ranking="+medal.getRanking());
 		}
@@ -83,7 +83,7 @@ public class MedalDBDAO{
 	 */
 	public void addOrUpdate(Medal medal){
 		List<String> matchs = new ArrayList<String>();
-		matchs.add("_id="+medal.getId());
+		matchs.add("_id="+"'"+medal.getId()+"'");
 		if(db.query(medalTable, null, matchs)!=null){
 			update(medal);
 		}else{

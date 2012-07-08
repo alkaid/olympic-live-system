@@ -1,6 +1,6 @@
 drop table if exists "lo_medal" ;
 create table lo_medal(
-    _id integer not null primary key,   
+    _id text not null primary key,   
     _ranking integer not null,
     _picture text, 
     _simpleName text not null,
@@ -16,9 +16,11 @@ create table lo_project(
 );
 drop table if exists "lo_match" ;
 create table lo_match(
-    _id integer not null primary key, 
-    _date date not null,
-    _time time not null,       
+    _id integer not null primary key,
+    _bjDate date not null, 
+    _bjTime time not null,
+    _londonDate date not null,
+    _londonTime time not null,       
     _projectId integer not null constraint fk_project_id references lo_project(_id) on delete cascade,
     _name text not null, 
     _hasTextLive integer not null,
