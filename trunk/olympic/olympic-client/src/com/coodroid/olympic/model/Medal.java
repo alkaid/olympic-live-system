@@ -8,7 +8,7 @@ public class Medal extends Model{
 
 	private static final long serialVersionUID = 346004374322062967L;
 	/** 每个国家奖牌榜所对应的id*/
-	private int id;
+	private String id;
 	/** 奖牌所对应的排名*/
 	private int ranking;
 	/** 国家所对应的国旗图片的地址*/
@@ -24,10 +24,10 @@ public class Medal extends Model{
 	/** 国家的所有奖牌数*/
 	private int total;
 	
-	public Medal(int id) {
+	public Medal(String id) {
 		this.id = id;
 	}	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 	public int getRanking() {
