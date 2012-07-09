@@ -1,63 +1,79 @@
-drop table if exists "lo_medal" ;
-create table lo_medal(
-    _id text not null primary key,   
-    _ranking integer not null,
-    _picture text, 
-    _simpleName text not null,
-    _gold integer not null,
-    _silver integer not null,
-    _copper integer not null,
-    _total integer not  null    
+DROP TABLE IF EXISTS "lo_medal" ;
+CREATE TABLE lo_medal 
+( 
+  _id int(10) NOT NULL PRIMARY KEY , 
+  _ranking int(10) NOT NULL , 
+  _picture varchar(255) , 
+  _simpleName varchar(255) NOT NULL , 
+  _gold int(10) NOT NULL , 
+  _silver int(10) NOT NULL , 
+  _copper int(10) NOT NULL , 
+  _total int(10) NOT NULL 
+) ;
+DROP TABLE IF EXISTS "lo_project" ;
+CREATE TABLE lo_project 
+( 
+  _id int(10) NOT NULL PRIMARY KEY , 
+  _name varchar(255) NOT NULL 
+) ;
+DROP TABLE IF EXISTS "lo_match" ;
+CREATE TABLE lo_match 
+( 
+  _id int(10) NOT NULL PRIMARY KEY , 
+  _bjDate date NOT NULL , 
+  _bjTime time NOT NULL , 
+  _londonDate date NOT NULL , 
+  _londonTime time NOT NULL , 
+  _projectId int(10) NOT NULL CONSTRAINT fk_project_id REFERENCES lo_project (_id) ON DELETE CASCADE, 
+  _name varchar(255) NOT NULL ,
+  _videoLiveUri varchar(255) NOT NULL,
+  _hasTextLive bit(1) NOT NULL , 
+  _hasVideoLive bit(1) NOT NULL 
+) ;
+DROP TABLE IF EXISTS "lo_textLive" ;
+CREATE TABLE lo_textLive 
+( 
+  _id int(10) NOT NULL PRIMARY KEY , 
+  _matchId int(10) NOT NULL CONSTRAINT fk_match_id REFERENCES lo_match (_id) ON DELETE CASCADE, 
+  _serverTime datetime NOT NULL , 
+  _score int(10) NOT NULL , 
+  _textTime varchar(255) NOT NULL , 
+  _text varchar(255) NOT NULL 
+) ;
+DROP TABLE IF EXISTS "lo_question" ;
+CREATE TABLE lo_question 
+( 
+  _id int(10) NOT NULL PRIMARY KEY , 
+  _order int(4) NOT NULL , 
+  _date date NOT NULL , 
+  _text varchar(255) NOT NULL , 
+  _answerId int(10) NOT NULL CONSTRAINT fk_answer_id REFERENCES lo_answer (_id) ON DELETE CASCADE, 
+  _score int(10) NOT NULL 
+) ;
+DROP TABLE IF EXISTS "lo_answer" ;
+CREATE TABLE lo_answer 
+( 
+  _id int(10) NOT NULL PRIMARY KEY , 
+  _order int(4) NOT NULL , 
+  _text varchar(255) NOT NULL 
+) ;
+DROP TABLE IF EXISTS "lo_answer2question" ;
+CREATE TABLE lo_answer2question 
+( 
+  _answerId varchar(255) NOT NULL CONSTRAINT fk_answer_id REFERENCES lo_answer (_id) ON DELETE CASCADE , 
+  _questionId varchar(255) NOT NULL CONSTRAINT fk_question_id REFERENCES lo_question (_id) ON DELETE CASCADE 
+) ;
+DROP TABLE IF EXISTS "lo_user";
+CREATE TABLE "lo_user" (
+   _id varchar(255) NOT NULL PRIMARY KEY,
+   _name varchar(255) NOT NULL ,
+   _password varchar(255) NOT NULL,
+   _questionScore int(11) NOT NULL default '0'
 );
-drop table if exists "lo_project" ;
-create table lo_project(
-    _id integer not null primary key,    
-    _name text not null
-);
-drop table if exists "lo_match" ;
-create table lo_match(
-    _id integer not null primary key,
-    _bjDate date not null, 
-    _bjTime time not null,
-    _londonDate date not null,
-    _londonTime time not null,       
-    _projectId integer not null constraint fk_project_id references lo_project(_id) on delete cascade,
-    _name text not null, 
-    _hasTextLive integer not null,
-    _hasVideoLive integer not null 
-);
-drop table if exists "lo_textLive" ;
-create table lo_textLive(
-    _id integer not null primary key ,     
-	_matchId integer not null constraint fk_match_id references lo_match(_id) on delete cascade,	
-    _serverTime datetime not null,    
-    _score text not null,    
-    _textTime text not null,    
-    _text text not null
-);
-drop table if exists "lo_question" ;
-create table lo_question(
-    _id integer not null primary key ,    
-    _order integer not null,         
-    _date date not null,         
-    _text text not null,    
-	_answerId integer not null constraint fk_answer_id references lo_answer(_id) on delete cascade,	
-    _score integer not null 
-);
-drop table if exists "lo_answer" ;
-create table lo_answer(
-    _id integer not null primary key ,    
-    _order integer not null,              
-    _text text not null  
-);
-drop table if exists "lo_answer2question" ;
-create table lo_answer2question( 
-	_answerId integer not null constraint fk_answer_id references lo_answer(_id) on delete cascade,	
-	_questionId integer not null constraint fk_question_id references lo_question(_id) on delete cascade		
-);
-drop table if exists "lo_user_answer" ;
-create table lo_user_answer(
-    _questionId integer not null,    
-    _answerId integer not null,              
-    _isRight integer not null  
-);
+DROP TABLE IF EXISTS "lo_user_answer" ;
+CREATE TABLE lo_user_answer 
+( _id varchar(255) NOT NULL CONSTRAINT fk_user_id REFERENCES lo_user(_id) ON DELETE CASCADE ON UPDATE CASCADE,
+  _questionId int(10) NOT NULL CONSTRAINT fk_question_id REFERENCES lo_question(_id) ON DELETE CASCADE ON UPDATE CASCADE, 
+  _answerId int(10) NOT NULL  CONSTRAINT fk_answer_id REFERENCES lo_answer(_id) ON DELETE CASCADE ON UPDATE CASCADE,
+  _isRight bit(1) NOT NULL   
+) ;
