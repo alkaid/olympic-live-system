@@ -64,7 +64,7 @@ public class HttpUtils {
 	public static final String HEADER_ORIGIN = "Origin";
 	public static final String HEADER_USER_AGENT = "User-Agent";
 	/** 连接超时时间 */
-	private static final int TIMEOUT_CONN = 3000;
+	private static final int TIMEOUT_CONN = 5000;
 	/** 请求超时时间 */
 	private static final int TIMEOUT_SOCKET = 5000;
 	/** 重试次数 */

@@ -40,7 +40,7 @@ public class OlympicClientActivity extends ActivityGroup {
         //隐藏标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //设置视图
-        getData();
+//        getData();
         setContentView(R.layout.main);
         init();
     }
