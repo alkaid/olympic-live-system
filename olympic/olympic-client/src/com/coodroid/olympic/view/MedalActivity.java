@@ -17,16 +17,22 @@ import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.common.SystemUtil;
 import com.coodroid.olympic.data.MedalDBDAO;
 import com.coodroid.olympic.model.Medal;
+import com.coodroid.olympic.ui.PullListView;
+import com.coodroid.olympic.ui.PullListView.OnRefreshListener;
 
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 /**
  * 奖牌榜的Activity
@@ -34,44 +40,150 @@ import android.widget.SimpleCursorAdapter;
  *
  */
 public class MedalActivity extends Activity{
+	/** 奖牌榜获取JSON的地址*/
+	private static final String medalUrl = "http://coodroid.com/ocdemo/index.php?route=olympic/medal";
+	/** 一页显示奖牌榜的最大值*/
+	private int maxPerPage = 20;
 	
-	public static final String medalUrl = "http://coodroid.com/ocdemo/index.php?route=olympic/medal";
+	
+	private final static int REFRESH_END = 0;
+	private final static int REFRESHING = 1;
+	
+	private int refreshState = 0;
+	
 	private MedalDBDAO db = null;
-	private ListView medalList = null;
+	MedalSimpleCursorAdapter adapter;
+	
+	private PullListView medalList = null;
+	private TextView moreMedal = null;
+	private ImageView refreshBtn = null;
+	private ProgressBar medalTitlePro = null;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.medal);
-		db = new MedalDBDAO(this);
-		medalList = (ListView) findViewById(R.id.medalTable);
-		updateListView();
+		setContentView(R.layout.medal);	
+		findview();
+		init();
+
 	}
 	
 	/**
-	 * 用于更新listview
+	 * 初始化操作，包括DB对象的建立，所有控件的监听
 	 */
-	private void updateListView(){
-		if(SystemUtil.checkNet(this)){
-			//服务器匹配10条数据，看有没有更新，有获得数据并更新到数据库中
-			ArrayList<Medal> medals = (ArrayList<Medal>) analyze(getServerData(0+"", 10+""));
-			for(Medal medal:medals){
-				db.addOrUpdate(medal);
+	private void init(){
+		db = new MedalDBDAO(this);
+		new RefreshAsyncTask(0).execute(null);
+		medalList.setonRefreshListener(new OnRefreshListener(){
+			@Override
+			public void onRefresh(){
+				new RefreshAsyncTask(0).execute(null);
 			}			
+		});
+		refreshBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				new RefreshAsyncTask(0).execute(null);
+			}
+		});
+		moreMedal.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				new RefreshAsyncTask(1).execute(null);
+			}
+		});
+	}
+	
+	/**
+	 * 初始化所有需要的view
+	 */
+	private void findview(){
+		medalList = (PullListView) findViewById(R.id.medalTable);
+		moreMedal = (TextView) findViewById(R.id.more_medal);
+		refreshBtn = (ImageView) findViewById(R.id.refresh_btn);
+		medalTitlePro = (ProgressBar) findViewById(R.id.medalTitleProgressBar);
+	}
+	
+	
+	/**
+	 * AsyncTask用于异步获取数据操作
+	 * @author Cater
+	 *
+	 */
+	private class RefreshAsyncTask extends AsyncTask<Void, Void, Cursor>{
+		/** tag用于标记后台所需要做的操作*/
+		int tag;
+		public RefreshAsyncTask(int tag) {
+			this.tag=tag;
 		}
-		Cursor cr = db.queryPaging(1, 10);
-//		if(cr!=null){
-//				cr.getColumnNames();
-//				LogUtil.i(Integer.toString(cr.getColumnCount()));
-//		}
-		if(cr!=null){
-			String[] columnNames = {cr.getColumnName(1),
-						cr.getColumnName(2),cr.getColumnName(3),cr.getColumnName(4),cr.getColumnName(5),cr.getColumnName(6),cr.getColumnName(7)};
-			MedalSimpleCursorAdapter adapter = new MedalSimpleCursorAdapter
-					(this, R.layout.medal_list, cr, columnNames, new int[]{R.id.ranking,R.id.picture,R.id.simpleName,
-							R.id.gold,R.id.silver,R.id.copper,R.id.total});
-			medalList.setAdapter(adapter);
+		
+		@Override
+		protected Cursor doInBackground(Void... params) {
+			if(tag==0){
+				return LoadData(1);
+			}else if(tag==1){
+				return LoadData(0);
+			}else{
+				return null;
+			}
 		}
+		
+		@Override
+		protected void onPostExecute(Cursor cr) {
+			if(cr!=null){
+				String[] columnNames = {cr.getColumnName(1),
+							cr.getColumnName(2),cr.getColumnName(3),cr.getColumnName(4),cr.getColumnName(5),cr.getColumnName(6),cr.getColumnName(7)};
+				adapter = new MedalSimpleCursorAdapter
+						(MedalActivity.this, R.layout.medal_list, cr, columnNames, new int[]{R.id.ranking,R.id.picture,R.id.simpleName,
+								R.id.gold,R.id.silver,R.id.copper,R.id.total});
+				medalList.setAdapter(adapter);
+			}
+			adapter.notifyDataSetChanged();
+			medalList.onRefreshComplete();
+		}
+		
+	}
+	
+	
+	/**
+	 * 用于读取数据,如果page为0表示请求所有数据，返回所有数据
+	 * @param page 第几页开始读
+	 * 
+	 */
+	private Cursor LoadData(int page){
+		
+			if(SystemUtil.checkNet(this)){
+				if(page>0){
+					//服务器匹配20条数据，看有没有更新，有获得数据并更新到数据库中
+					ArrayList<Medal> medals = (ArrayList<Medal>) analyze(getServerData((page-1)*maxPerPage+"", maxPerPage+""));
+					if(medals!=null){
+						for(Medal medal:medals){
+							db.addOrUpdate(medal);
+						}
+						return db.queryPaging(page, maxPerPage);
+					}else{
+						return null;
+					}
+					
+				}else if(page==0){
+					ArrayList<Medal> medals = (ArrayList<Medal>) analyze(getServerData(null,null));
+					if(medals!=null){						
+						for(Medal medal:medals){
+							db.addOrUpdate(medal);
+						}
+						return db.queryAll();
+					}else{
+						return null;
+					}
+				}else{
+					return null;
+				}
+			}else{
+				return null;
+			}
+		
+
 	}
 	
 	/**
@@ -86,8 +198,12 @@ public class MedalActivity extends Activity{
 			HttpUtils.setConnectionTimeout(3000);
 			HttpUtils.setRetryCount(0);
 			Map<String, String> params = new HashMap<String, String>();
-			params.put("l", length);
-			params.put("p1", index);
+			if(length!=null&&Integer.parseInt(length)>0){
+				params.put("l", length);
+			}
+			if(index!=null&&Integer.parseInt(index)>=0){
+				params.put("p1", index);
+			}
 			medalServerData = HttpUtils.getContent(medalUrl, HttpUtils.METHOD_GET, params, "utf-8");
 			LogUtil.i(medalServerData);
 		} catch (MalformedURLException e) {
@@ -105,53 +221,32 @@ public class MedalActivity extends Activity{
 	 * @return 返回多条奖牌的记录
 	 */
 	private List<Medal> analyze(String medalServerData){
-		List<Medal> medals = new ArrayList<Medal>();
-		try {
-			JSONObject medalJSON = new JSONObject(medalServerData);
-			if(medalJSON.getString("staus").equals("2")){
-				JSONArray medalArray = medalJSON.getJSONArray("data");
-				for(int i=0;i<medalArray.length();i++){
-					JSONObject medalObject = (JSONObject) medalArray.opt(i);
-					Medal m = new Medal(medalObject.getString("id"));
-					m.setRanking(Integer.parseInt(medalObject.getString("ranking")));
-					m.setSimpleName(medalObject.getString("simpleName"));
-					m.setGold(Integer.parseInt(medalObject.getString("gold")));
-					m.setSilver(Integer.parseInt(medalObject.getString("silver")));
-					m.setCopper(Integer.parseInt(medalObject.getString("copper")));
-					m.setTotal(Integer.parseInt(medalObject.getString("total")));
-					medals.add(m);
+		if(medalServerData!=null){
+			List<Medal> medals = new ArrayList<Medal>();
+			try {
+				JSONObject medalJSON = new JSONObject(medalServerData);
+				if(medalJSON.getString("staus").equals("2")){
+					JSONArray medalArray = medalJSON.getJSONArray("data");
+					for(int i=0;i<medalArray.length();i++){
+						JSONObject medalObject = (JSONObject) medalArray.opt(i);
+						Medal m = new Medal(medalObject.getString("id"));
+						m.setRanking(Integer.parseInt(medalObject.getString("ranking")));
+						m.setSimpleName(medalObject.getString("simpleName"));
+						m.setGold(Integer.parseInt(medalObject.getString("gold")));
+						m.setSilver(Integer.parseInt(medalObject.getString("silver")));
+						m.setCopper(Integer.parseInt(medalObject.getString("copper")));
+						m.setTotal(Integer.parseInt(medalObject.getString("total")));
+						medals.add(m);
+					}
 				}
+			} catch (JSONException e) {
+				LogUtil.e(e);
 			}
-		} catch (JSONException e) {
-			LogUtil.e(e);
+			return medals;
 		}
-		return medals;
+		return null;
 	}
-	
-//	/**
-//	 * 解析请求返回的数据，并相应的更新数据库
-//	 * @param url
-//	 */
-//	private void analyzeData(String url){
-//    	try {
-//			HttpUtils.setConnectionTimeout(3000);
-//			HttpUtils.setRetryCount(0);
-//			Map<String, String> params = new HashMap<String, String>();
-//			params.put("p1", "0");
-//			params.put("l", "10");
-//			params.put("v","0");
-//			String data = HttpUtils.getContent(url, "GET", params, "utf-8");
-//			LogUtil.i(data);
-//		} catch (MalformedURLException e) {
-//			LogUtil.e(e);
-//		} catch (IOException e) {
-//			LogUtil.e(e);
-//		}
-//
-//	}
-//	
-	
-	
+		
 	/**
 	 * 用于显示奖牌表ListView的适配器，其中getView里的方法是制作多彩表格的。
 	 * @author Cater
@@ -166,6 +261,7 @@ public class MedalActivity extends Activity{
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			LogUtil.v("MAOXIA",position+"");
 			 View view = null; 
 			         if (convertView != null) { 
 			             view = convertView; 
@@ -180,6 +276,21 @@ public class MedalActivity extends Activity{
 			         return super.getView(position, view, parent); 
 		}
 		
+	}
+	
+	private void changeViewByState(){
+		switch(refreshState){
+		case REFRESHING:
+			medalTitlePro.setVisibility(View.VISIBLE);
+			refreshBtn.setVisibility(View.GONE);
+			medalList.onRefreshing();
+			break;
+		case REFRESH_END:
+			medalTitlePro.setVisibility(View.GONE);
+			refreshBtn.setVisibility(View.VISIBLE);
+			medalList.onRefreshComplete();
+		break;
+		}
 	}
 	
 	

@@ -51,16 +51,16 @@ public class MedalDBDAO{
 	public void update(Medal medal){
 		List<String> updates = new ArrayList<String>();
 		List<String> matchs = new ArrayList<String>();
-		matchs.add("_id="+"'"+medal.getId()+"'");
-		updates.add("_id="+"'"+medal.getId()+"'");
+		matchs.add("_id="+"'"+db.formatSQL(medal.getId())+"'");
+		updates.add("_id="+"'"+db.formatSQL(medal.getId())+"'");
 		if(medal.getRanking()!=-1){
 			updates.add("_ranking="+medal.getRanking());
 		}
 		if(medal.getPicture()!=null){
-			updates.add("_picture="+"'"+medal.getPicture()+"'");
+			updates.add("_picture="+"'"+db.formatSQL(medal.getPicture())+"'");
 		}
 		if(medal.getSimpleName()!=null){
-			updates.add("_simpleName="+"'"+medal.getSimpleName()+"'");
+			updates.add("_simpleName="+"'"+db.formatSQL(medal.getSimpleName())+"'");
 		}
 		if(medal.getGold()!=-1){
 			updates.add("_gold="+medal.getGold());
@@ -83,7 +83,7 @@ public class MedalDBDAO{
 	 */
 	public void addOrUpdate(Medal medal){
 		List<String> matchs = new ArrayList<String>();
-		matchs.add("_id="+"'"+medal.getId()+"'");
+		matchs.add("_id="+"'"+db.formatSQL(medal.getId())+"'");
 		if(db.query(medalTable, null, matchs)!=null){
 			update(medal);
 		}else{
@@ -94,8 +94,8 @@ public class MedalDBDAO{
 	
 	/**
 	 * 查询第几页的记录,其中查询的列包括ranking,picture,simpleName,gold,silver,copper,total
-	 * @param page第几页
-	 * @param resultMax每页多少记录
+	 * @param page查询第几页
+	 * @param maxResult每页多少记录
 	 */
 	public Cursor queryPaging(int page,int maxResult){
 //		List<String> columns = new ArrayList<String>();
@@ -110,6 +110,13 @@ public class MedalDBDAO{
 		return db.queryPaging(medalTable, null,firstResult, maxResult);
 	}
 	
+	/**
+	 * 用于查询所有的
+	 * @return
+	 */
+	public Cursor queryAll(){
+		return db.query(medalTable, null, null);
+	}
 	/**
 	 * 用于关闭数据库操作
 	 */

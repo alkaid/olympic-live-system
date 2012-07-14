@@ -3,20 +3,44 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-    <LinearLayout android:gravity="center_horizontal"  android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:background="@android:color/darker_gray">
+    <RelativeLayout android:id="@+id/match_title" android:layout_height="wrap_content" 
+        android:layout_width="fill_parent" android:layout_alignParentTop="true"
+        android:background="@android:color/darker_gray">
+        <TextView android:id="@+id/match_select" android:textColor="@android:color/black" android:layout_centerVertical="true"   
+            android:textSize="20sp" android:text="筛选" android:layout_marginLeft="6.4dp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" 
+            android:layout_alignParentLeft="true"/>
         <TextView android:id="@+id/cust_title" android:textColor="@android:color/white"
-            android:textSize="28sp" android:text="赛程表" android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            android:textSize="28sp" android:text="赛程表" 
+            android:layout_width="wrap_content" android:layout_height="wrap_content" 
+            android:layout_centerInParent="true"/>
+        <ImageView android:id="@+id/refresh_btn" android:src="@drawable/refresh" android:layout_marginRight="6.4dp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" 
+            android:layout_alignParentRight="true"  android:layout_marginLeft="6dp" android:layout_centerVertical="true"/>
+        <ProgressBar
+			  android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+			  style="?android:attr/progressBarStyleSmall"
+			  android:id="@+id/matchTitleProcessBar"
+			  android:layout_marginRight="6.4dp"
+			  android:layout_alignParentRight="true"			  
+			  android:visibility="gone"
+  		/>
+    </RelativeLayout>
     <LinearLayout android:id="@+id/match_content" android:layout_width="fill_parent"
         android:layout_height="wrap_content" android:orientation="horizontal">
-        <ListView android:id="@+id/match_date" android:layout_weight="4"
-            android:layout_width="fill_parent" android:layout_height="wrap_content">
-        </ListView>
-        <ListView android:id="@+id/match_list" android:layout_weight="1"
-            android:layout_width="fill_parent" android:layout_height="wrap_content" >
-        </ListView>
+        <RelativeLayout android:layout_height="fill_parent" android:layout_weight="4"
+            android:layout_width="fill_parent">
+	        <ListView android:id="@+id/match_date" android:scrollbars="none"
+	            android:layout_width="fill_parent" android:layout_height="fill_parent">
+	        </ListView>
+        </RelativeLayout>
+        <RelativeLayout android:layout_height="fill_parent" android:layout_weight="1"
+            android:layout_width="fill_parent"  android:background="@android:color/white">
+	        <ListView android:id="@+id/match_list"
+	            android:layout_width="fill_parent" android:layout_height="fill_parent" >
+	        </ListView>
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

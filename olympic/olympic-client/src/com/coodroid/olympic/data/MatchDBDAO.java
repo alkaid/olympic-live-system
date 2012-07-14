@@ -24,11 +24,9 @@ public class MatchDBDAO{
 	public static final String matchTable="lo_match";
 	public static final String projectTable="lo_project";
 	private DBHelper db = null;
-	private SimpleDateFormat format;
 	public MatchDBDAO(Context context) {
 		db = DBHelper.getInstance(context, Constants.OlympicDB);
 		db.open();
-		format = new SimpleDateFormat();
 	}
 	
 	/**
@@ -40,32 +38,34 @@ public class MatchDBDAO{
 		Cursor cProject = db.query(projectTable,null,null);
 		int projectIdInServer = match.getPartOfProject().getId();
 		boolean isExistProjectID = false;
-		if(cProject.moveToFirst()){
-			do{
-				int columnIndex = cProject.getColumnIndex("_id");
-				if(projectIdInServer==cProject.getInt(columnIndex)){
-					isExistProjectID = true;
-					break;
-				}
-			}while(cProject.moveToNext());
-		}
-		if(!isExistProjectID){
-			ContentValues cvProject = new ContentValues();
-			cvProject.put("_id", projectIdInServer);
-			cvProject.put("_name", match.getPartOfProject().getName());
-			db.insert(projectTable, cvProject);
-		}
+			if(cProject!=null&&cProject.moveToFirst()){
+				do{
+					int columnIndex = cProject.getColumnIndex("_id");
+					if(projectIdInServer==cProject.getInt(columnIndex)){
+						isExistProjectID = true;
+						break;
+					}
+				}while(cProject.moveToNext());
+			}
+			if(!isExistProjectID){
+				ContentValues cvProject = new ContentValues();
+				cvProject.put("_id", projectIdInServer);
+				cvProject.put("_name", match.getPartOfProject().getName());
+				db.insert(projectTable, cvProject);
+				
+			}
 		//做比赛数据的插入操作
 		ContentValues cvMatch = new ContentValues();
 		cvMatch.put("_id", match.getId());
 		cvMatch.put("_bjDate",match.getBjDate());
-		cvMatch.put("_bjTime",format.format(match.getBjTime()));
+		cvMatch.put("_bjTime",match.getBjTime());
 		cvMatch.put("_name", match.getName());
 		cvMatch.put("_hasTextLive", match.getHasTextLive());
 		cvMatch.put("_hasVideoLive", match.getHasVideoLive());
 		cvMatch.put("_videoChannel", match.getVideoChannel());
 		cvMatch.put("_londonDate", match.getLondonDate());
-		cvMatch.put("_londonTime", match.getLondonDate());
+		cvMatch.put("_londonTime", match.getLondonTime());
+		cvMatch.put("_projectId", projectIdInServer);
 		db.insert(matchTable, cvMatch);
 	}
 	
@@ -80,13 +80,13 @@ public class MatchDBDAO{
 		matchs.add("_id="+match.getId());
 		updates.add("_id="+match.getId());
 		if(match.getBjDate()!=null){
-			updates.add("_bjDate="+match.getBjDate());
+			updates.add("_bjDate="+"'"+db.formatSQL(match.getBjDate())+"'");
 		}
 		if(match.getBjTime()!=null){
-			updates.add("_bjTime="+match.getBjDate());
+			updates.add("_bjTime="+"'"+db.formatSQL(match.getBjTime())+"'");
 		}
 		if(match.getName()!=null){
-			updates.add("_name="+match.getName());
+			updates.add("_name="+"'"+db.formatSQL(match.getName())+"'");
 		}
 		if(match.getHasTextLive()!=-1){
 			updates.add("_hasTextLive="+match.getHasTextLive());
@@ -98,10 +98,10 @@ public class MatchDBDAO{
 			updates.add("_videoChannel="+match.getVideoChannel());
 		}
 		if(match.getLondonDate()!=null){
-			updates.add("_londonDatetime="+match.getLondonDate());
+			updates.add("_londonDate="+"'"+db.formatSQL(match.getLondonDate())+"'");
 		}
 		if(match.getLondonTime()!=null){
-			updates.add("_londonDatetime="+match.getLondonTime());
+			updates.add("_londonTime="+"'"+db.formatSQL(match.getLondonTime())+"'");
 		}
 		db.update(matchTable, updates, matchs);			
 	}
@@ -132,28 +132,33 @@ public class MatchDBDAO{
 	}
 	
 	/**
-	 * 
+	 * 根据date（日期）查询当天赛事，并按时间排序
 	 * @param date日期(北京时间)根据日期查找当天的赛事,按之间顺序排列
 	 * @return返回查询出的数据
 	 */
-//	public Cursor query(String date){
-//		if(date!=null){
-////			String sql = 
-////			return db.query(matchTable, null, matchs);
-//		}else{
-//			return null;
-//		}
-//	}
+	public Cursor query(String date){
+		if(date!=null){
+			String sql = "SELECT * FROM "+matchTable+" where _bjDate="+"'"+db.formatSQL(date)+"'"+" order by _bjTime";
+			return db.query(sql);
+		}else{
+			return null;
+		}
+	}
 	
 	/**
-	 * 
-	 * @param allMatch 需要分组的Cursor
-	 * @param comluns group by后的列名
-	 * @return 分组后一个project 对应一些列值
+	 * 查询date（日期）当天赛事，附带project的信息，并按projectId和time排序
+	 * @param date 日期
+	 * @return 
 	 */
-/*	public Map<MatchProject, List<Match>> group(String date){
+	public Cursor groupQuery(String date){
+		if(date!=null){
+			String sql = "SELECT * FROM "+matchTable+" m  left join "+projectTable +" p  on m._projectId=p._id where m._bjDate="+"'"+db.formatSQL(date)+"'"+" order by m._projectId,m._bjTime";
+			return db.query(sql);
+		}else{
+			return null;
+		}
 		
-	}*/
+	}
 	/**
 	 * 用于关闭数据库操作
 	 */

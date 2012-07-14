@@ -241,7 +241,7 @@ LogUtil.i(sql);
 				String sql = "SELECT "+columnStr+" FROM "+table;
 				return processCurosr(db.rawQuery(sql, null));
 			}else{
-				return processCurosr(db.rawQuery("SELECT * FROM"+table, null));
+				return processCurosr(db.rawQuery("SELECT * FROM "+table, null));
 			}
 		}else{
 			return null;
@@ -265,10 +265,19 @@ LogUtil.i(sql);
 //	}
 	
 	/**
+	 * 通过sql语句查询语句
+	 * @param sql SQL语句的String形式
+	 * @return
+	 */
+	public Cursor query(String sql){
+		return db.rawQuery(sql, null);
+	}
+	
+	/**
 	 * 用于DB做分页操作的。查询出的结果是所有字段的
 	 * @param table从第几条数据开始查询
-	 * @param firstResult第几页
-	 * @param maxResult每页几行
+	 * @param firstResult跳过几行
+	 * @param maxResult取几行
 	 * @return
 	 */
 	public Cursor queryPaging(String table,List<String> columns,int firstResult,int maxResult){
@@ -305,6 +314,15 @@ LogUtil.i(sql);
 	}
 	
 	/**
+	 * 用于对某些sql出现转义字符的进行处理
+	 * @param str需要转义的字符
+	 * @return
+	 */
+	public String formatSQL(String str){
+		return str.replaceAll("'","''");
+	}
+	
+	/**
 	 * 用于关闭SqliteDatabase的操作
 	 */
 	public void close(){
@@ -312,5 +330,6 @@ LogUtil.i(sql);
 			db.close();
 		}
 	}
+	
 
 }
