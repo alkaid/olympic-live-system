@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:orientation="vertical" android:background="@android:color/white">
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="50dp" android:gravity="center_vertical"
+    android:paddingLeft="10dp" android:paddingRight="10dp"
+    android:background="@android:color/darker_gray">
+    <TextView android:textColor="@android:color/white"
+            android:textSize="24sp" android:text="注册" android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <TextView android:id="@+id/btnLogin" android:textColor="@android:color/white"
+            android:textSize="24sp" android:text="登录" android:layout_alignParentRight="true"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+</RelativeLayout>
+<LinearLayout 
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+    android:layout_marginTop="40dp" android:orientation="vertical">
+	<LinearLayout android:id="@+id/layForm"
+	    android:layout_width="fill_parent" android:layout_height="wrap_content"
+	    android:layout_marginBottom="40dp" android:orientation="vertical">
+	</LinearLayout>
+	<LinearLayout 
+	    android:layout_width="fill_parent" android:layout_height="wrap_content"
+	    android:layout_marginBottom="40dp">
+	    <CheckBox android:id="@+id/ckbAgreement" android:checked="true" android:button="@drawable/checkbox_normal"
+	        android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+	    <TextView android:id="@+id/tvAgreement"
+	        android:text="我已阅读并同意《注册协议》"
+	        android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+	</LinearLayout>
+	<Button android:id="@+id/btnRegister"
+	    android:text="注册" android:textSize="24sp"
+	    android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+</LinearLayout>>
+</LinearLayout>

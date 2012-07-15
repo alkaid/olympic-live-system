@@ -2,12 +2,15 @@ package com.coodroid.olympic.common;
 
 import java.io.InputStream;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
+import android.view.Display;
 
 public class SystemUtil {
 
@@ -63,4 +66,15 @@ public class SystemUtil {
 		return sb.toString();
 	}
 
+	/**
+	 * 获得DisplayMetrics
+	 * @param context
+	 * @return
+	 */
+	public static DisplayMetrics getDm(Activity context){
+		Display display = context.getWindowManager().getDefaultDisplay();
+		DisplayMetrics dm=new DisplayMetrics();
+		display.getMetrics(dm);
+		return dm;
+	}
 }
