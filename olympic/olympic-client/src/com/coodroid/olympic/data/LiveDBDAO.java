@@ -89,6 +89,10 @@ public class LiveDBDAO{
 		return db.queryPaging(liveTable,null, firstResult, maxResult);
 	}
 	
+//	public Cursor query(String date){
+//		
+//	}
+	
 	/**
 	 * 用于关闭数据库操作
 	 */
