@@ -53,9 +53,6 @@ public class MatchActivity extends Activity{
 	/** 赛程表UI显示的赛程日 */
 	private String[] dates = {"7-27","开幕式","7-29","7-30","7-31","8-01",
 			"8-02","8-03","8-04","8-05","8-06","8-07","8-08","8-09","8-10","8-12","闭幕式"};
-	/** 用于向服务端请求的日期,匹配每一个比赛日 */
-	private String[] requestDates ={"20120727","20120728","20120729","20120730","20120731","20120801","20120802",
-			"20120803","20120804","20120805","20120806","20120807","20120809","20120810","20120811","20120812","20120813"};
 	/**用于点击匹配数据库的日期*/
 	private String[] matchDates ={"2012-07-27","2012-07-28","2012-07-29","2012-07-30","2012-07-31","2012-08-01","2012-08-02",
 			"2012-08-03","2012-08-04","2012-08-05","2012-08-06","2012-08-07","2012-08-09","2012-08-10","2012-08-11","2012-08-12","2012-08-13"};
@@ -200,7 +197,7 @@ public class MatchActivity extends Activity{
 			ArrayList<Match> matchs = null;
 			//根据日期到服务器匹配数据
 			if(position!=-1){
-				matchs = (ArrayList<Match>) analyze(getServerData(requestDates[position]));
+				matchs = (ArrayList<Match>) analyze(getServerData(matchDates[position]));
 			}else{
 				matchs = (ArrayList<Match>) analyze(getServerData(null));
 			}
