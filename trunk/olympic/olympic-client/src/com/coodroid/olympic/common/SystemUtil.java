@@ -1,6 +1,7 @@
 package com.coodroid.olympic.common;
 
-import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
@@ -64,6 +65,26 @@ public class SystemUtil {
 		//手机型号
 		sb.append(Build.MODEL).append("  ").append(Build.VERSION.RELEASE);//SDK
 		return sb.toString();
+	}
+	
+	/**
+	 * 获取当前手机的系统年月日
+	 * 
+	 */
+	
+	public static String getCurrentDate(){
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return sdf.format(date);
+	}
+	
+	/**
+	 * 获取当前手机的系统时分秒
+	 */
+	public static String getCurrentTime(){
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		return sdf.format(date);
 	}
 
 	/**

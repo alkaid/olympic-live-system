@@ -1,7 +1,6 @@
 package com.coodroid.olympic.view;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +10,7 @@ import com.coodroid.olympic.common.Constants;
 import com.coodroid.olympic.common.DBHelper;
 import com.coodroid.olympic.common.HttpUtils;
 import com.coodroid.olympic.common.LogUtil;
-import com.coodroid.olympic.common.SystemUtil;
 
-import android.app.Activity;
 import android.app.ActivityGroup;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 public class OlympicClientActivity extends ActivityGroup {
 	

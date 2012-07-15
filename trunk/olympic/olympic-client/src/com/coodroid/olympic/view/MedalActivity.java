@@ -45,14 +45,8 @@ public class MedalActivity extends Activity{
 	/** 一页显示奖牌榜的最大值*/
 	private int maxPerPage = 20;
 	
-	
-	private final static int REFRESH_END = 0;
-	private final static int REFRESHING = 1;
-	
 	private final static int ALL_MEDALS = 1;
 	private final static int PART_MEDALS = 0;
-	
-	private int refreshState = 0;
 	
 	private MedalDBDAO db = null;
 	MedalSimpleCursorAdapter adapter;
@@ -202,7 +196,7 @@ public class MedalActivity extends Activity{
 	 * @param length 请求返回的长度
 	 * @return JSON用于解析
 	 */
-	private String getServerData(String index,String length){
+	public String getServerData(String index,String length){
 		String medalServerData = null;
     	try {
 			HttpUtils.setConnectionTimeout(3000);
@@ -230,7 +224,7 @@ public class MedalActivity extends Activity{
 	 * @param medalServerData 服务端的Json
 	 * @return 返回多条奖牌的记录
 	 */
-	private List<Medal> analyze(String medalServerData){
+	public List<Medal> analyze(String medalServerData){
 		if(medalServerData!=null){
 			List<Medal> medals = new ArrayList<Medal>();
 			try {
@@ -286,21 +280,6 @@ public class MedalActivity extends Activity{
 			         return super.getView(position, view, parent); 
 		}
 		
-	}
-	
-	private void changeViewByState(){
-		switch(refreshState){
-		case REFRESHING:
-			medalTitleProgressBar.setVisibility(View.VISIBLE);
-			refreshBtn.setVisibility(View.GONE);
-			medalList.onRefreshing();
-			break;
-		case REFRESH_END:
-			medalTitleProgressBar.setVisibility(View.GONE);
-			refreshBtn.setVisibility(View.VISIBLE);
-			medalList.onRefreshComplete();
-		break;
-		}
 	}
 	
 	/**

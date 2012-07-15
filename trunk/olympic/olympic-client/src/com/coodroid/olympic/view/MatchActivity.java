@@ -15,7 +15,6 @@ import com.coodroid.olympic.common.HttpUtils;
 import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.common.SystemUtil;
 import com.coodroid.olympic.data.MatchDBDAO;
-import com.coodroid.olympic.model.Category;
 import com.coodroid.olympic.model.Match;
 import com.coodroid.olympic.model.MatchProject;
 import com.coodroid.olympic.ui.CategoryAdapter;
@@ -29,17 +28,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 /**
@@ -51,10 +47,10 @@ public class MatchActivity extends Activity{
 	/** 请求的链接 */
 	public static final String matchUrl = "http://coodroid.com/ocdemo/index.php?route=olympic/match";
 	/** 赛程表UI显示的赛程日 */
-	private String[] dates = {"7-27","开幕式","7-29","7-30","7-31","8-01",
+	private String[] dates = {"7-26","7-27","开幕式","7-29","7-30","7-31","8-01",
 			"8-02","8-03","8-04","8-05","8-06","8-07","8-08","8-09","8-10","8-12","闭幕式"};
 	/**用于点击匹配数据库的日期*/
-	private String[] matchDates ={"2012-07-27","2012-07-28","2012-07-29","2012-07-30","2012-07-31","2012-08-01","2012-08-02",
+	private String[] matchDates ={"2012-07-26","2012-07-27","2012-07-28","2012-07-29","2012-07-30","2012-07-31","2012-08-01","2012-08-02",
 			"2012-08-03","2012-08-04","2012-08-05","2012-08-06","2012-08-07","2012-08-09","2012-08-10","2012-08-11","2012-08-12","2012-08-13"};
 	
 	/** 被选中的赛程日 */
@@ -261,7 +257,7 @@ public class MatchActivity extends Activity{
 	 * @return JSON用于解析
 	 */
 	
-	private String getServerData(String date){
+	public String getServerData(String date){
 		String matchServerData = null;
     	try {
 			HttpUtils.setConnectionTimeout(3000);
@@ -286,7 +282,7 @@ public class MatchActivity extends Activity{
 	 * @param matchServerData 服务端的Json
 	 * @return 返回多条比赛记录
 	 */
-	private List<Match> analyze(String matchServerData){
+	public List<Match> analyze(String matchServerData){
 		if(matchServerData!=null){
 			List<Match> matchs = new ArrayList<Match>();
 			try {
@@ -298,13 +294,11 @@ public class MatchActivity extends Activity{
 						Match m = new Match(Integer.parseInt(matchObject.getString("id")));
 						//解析伦敦时间日期
 						String londonTime = matchObject.getString("londonTime");
-//						Pattern pLondonTime = Pattern.compile("\\s+");
 						String[] londonTimes = londonTime.split("\\s+");
 						m.setLondonDate(londonTimes[0]);
 						m.setLondonTime(londonTimes[1]);
 						//解析北京时间日期
 						String bjDatetime =matchObject.getString("datetime");
-//						Pattern pBjTime = Pattern.compile(bjDatetime);
 						String[] bjTimes = bjDatetime.split("\\s+");
 						m.setBjDate(bjTimes[0]);
 						m.setBjTime(bjTimes[1]);					
