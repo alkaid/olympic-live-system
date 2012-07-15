@@ -49,6 +49,9 @@ public class MedalActivity extends Activity{
 	private final static int REFRESH_END = 0;
 	private final static int REFRESHING = 1;
 	
+	private final static int ALL_MEDALS = 1;
+	private final static int PART_MEDALS = 0;
+	
 	private int refreshState = 0;
 	
 	private MedalDBDAO db = null;
@@ -57,7 +60,8 @@ public class MedalActivity extends Activity{
 	private PullListView medalList = null;
 	private TextView moreMedal = null;
 	private ImageView refreshBtn = null;
-	private ProgressBar medalTitlePro = null;
+	private ProgressBar medalTitleProgressBar = null;
+	private ProgressBar medalContentProgressBar = null;
 	
 	
 	@Override
@@ -74,23 +78,23 @@ public class MedalActivity extends Activity{
 	 */
 	private void init(){
 		db = new MedalDBDAO(this);
-		new RefreshAsyncTask(0).execute(null);
+		updateMedalContent(0);
 		medalList.setonRefreshListener(new OnRefreshListener(){
 			@Override
 			public void onRefresh(){
-				new RefreshAsyncTask(0).execute(null);
+				updateMedalContent(0);
 			}			
 		});
 		refreshBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new RefreshAsyncTask(0).execute(null);
+				updateMedalContent(0);
 			}
 		});
 		moreMedal.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new RefreshAsyncTask(1).execute(null);
+				updateMedalContent(1);
 			}
 		});
 	}
@@ -102,7 +106,8 @@ public class MedalActivity extends Activity{
 		medalList = (PullListView) findViewById(R.id.medalTable);
 		moreMedal = (TextView) findViewById(R.id.more_medal);
 		refreshBtn = (ImageView) findViewById(R.id.refresh_btn);
-		medalTitlePro = (ProgressBar) findViewById(R.id.medalTitleProgressBar);
+		medalTitleProgressBar = (ProgressBar) findViewById(R.id.medalTitleProgressBar);
+		medalContentProgressBar= (ProgressBar) findViewById(R.id.medalContentProgressBar);
 	}
 	
 	
@@ -120,9 +125,9 @@ public class MedalActivity extends Activity{
 		
 		@Override
 		protected Cursor doInBackground(Void... params) {
-			if(tag==0){
+			if(tag==PART_MEDALS){
 				return LoadData(1);
-			}else if(tag==1){
+			}else if(tag==ALL_MEDALS){
 				return LoadData(0);
 			}else{
 				return null;
@@ -141,6 +146,11 @@ public class MedalActivity extends Activity{
 			}
 			adapter.notifyDataSetChanged();
 			medalList.onRefreshComplete();
+			refreshBtn.setVisibility(View.VISIBLE);
+			medalTitleProgressBar.setVisibility(View.GONE);
+			medalList.setVisibility(View.VISIBLE);
+			medalContentProgressBar.setVisibility(View.GONE);
+			
 		}
 		
 	}
@@ -281,16 +291,28 @@ public class MedalActivity extends Activity{
 	private void changeViewByState(){
 		switch(refreshState){
 		case REFRESHING:
-			medalTitlePro.setVisibility(View.VISIBLE);
+			medalTitleProgressBar.setVisibility(View.VISIBLE);
 			refreshBtn.setVisibility(View.GONE);
 			medalList.onRefreshing();
 			break;
 		case REFRESH_END:
-			medalTitlePro.setVisibility(View.GONE);
+			medalTitleProgressBar.setVisibility(View.GONE);
 			refreshBtn.setVisibility(View.VISIBLE);
 			medalList.onRefreshComplete();
 		break;
 		}
+	}
+	
+	/**
+	 * 用于刷新medal奖牌榜的
+	 * @param i i=0表示刷新几条奖牌，i=1表示刷新所有奖牌榜
+	 */
+	private void updateMedalContent(int i){
+		refreshBtn.setVisibility(View.GONE);
+		medalTitleProgressBar.setVisibility(View.VISIBLE);
+		medalList.setVisibility(View.GONE);
+		medalContentProgressBar.setVisibility(View.VISIBLE);
+		new RefreshAsyncTask(i).execute(null);
 	}
 	
 	

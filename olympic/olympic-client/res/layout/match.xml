@@ -10,10 +10,17 @@
             android:textSize="20sp" android:text="筛选" android:layout_marginLeft="6.4dp"
             android:layout_width="wrap_content" android:layout_height="wrap_content" 
             android:layout_alignParentLeft="true"/>
-        <TextView android:id="@+id/cust_title" android:textColor="@android:color/white"
-            android:textSize="28sp" android:text="赛程表" 
-            android:layout_width="wrap_content" android:layout_height="wrap_content" 
-            android:layout_centerInParent="true"/>
+        <RelativeLayout android:id="@+id/cust_title" android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" android:layout_centerInParent="true">
+            <TextView  android:id="@+id/title_name"  android:textColor="@android:color/white"
+	            android:textSize="28sp" android:text="赛程表" 
+	            android:layout_width="wrap_content" android:layout_height="wrap_content" 
+	            android:layout_alignParentLeft="true" android:layout_centerHorizontal="true"/>
+        	<ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+	            android:layout_toRightOf="@id/title_name" android:layout_centerVertical="true"
+	            android:src="@drawable/select"/>
+        </RelativeLayout>
+        
         <ImageView android:id="@+id/refresh_btn" android:src="@drawable/refresh" android:layout_marginRight="6.4dp"
             android:layout_width="wrap_content" android:layout_height="wrap_content" 
             android:layout_alignParentRight="true"  android:layout_marginLeft="6dp" android:layout_centerVertical="true"/>
@@ -22,6 +29,7 @@
 			  android:layout_height="wrap_content"
 			  style="?android:attr/progressBarStyleSmall"
 			  android:id="@+id/matchTitleProcessBar"
+			  android:layout_centerVertical="true"
 			  android:layout_marginRight="6.4dp"
 			  android:layout_alignParentRight="true"			  
 			  android:visibility="gone"
@@ -40,7 +48,16 @@
 	        <ListView android:id="@+id/match_list"
 	            android:layout_width="fill_parent" android:layout_height="fill_parent" >
 	        </ListView>
+	         <ProgressBar
+			  android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+			  style="?android:attr/progressBarStyleSmall"
+			  android:id="@+id/matchContentProcessBar"
+			  android:layout_centerInParent="true"			  
+			  android:visibility="gone"
+  			/>
         </RelativeLayout>
+
     </LinearLayout>
 
 </LinearLayout>

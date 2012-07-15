@@ -27,14 +27,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 /**
@@ -65,6 +70,13 @@ public class MatchActivity extends Activity{
 	private ListView matchDateList;
 	/** 赛程表里右列的赛程内容list */
 	private ListView matchList;
+	/** 赛程标题下拉菜单*/
+	private RelativeLayout matchTitle;
+	/**赛程标题右边刷新控件*/
+	private ImageView refreshBtn;
+	/**缓冲的圆形滚动条*/
+	private ProgressBar matchProgressBar;
+	private ProgressBar matchContentProgressBar;
 	
 	/**用于存放用于显示的比赛（按时间排列的）*/
 	private List<Match> matchsTimeOrder;
@@ -75,6 +87,8 @@ public class MatchActivity extends Activity{
 	
 	private MatchDBDAO db;
 	private LayoutInflater mInflater;
+	
+	private int orderShow = PROJECT_ORDER;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,18 +105,34 @@ public class MatchActivity extends Activity{
 		mInflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 		matchDateList = (ListView) findViewById(R.id.match_date);
 		matchList = (ListView) findViewById(R.id.match_list);
+		matchTitle = (RelativeLayout) findViewById(R.id.match_title);
+		refreshBtn = (ImageView) findViewById(R.id.refresh_btn);
+		matchProgressBar = (ProgressBar) findViewById(R.id.matchTitleProcessBar);
+		matchContentProgressBar =(ProgressBar) findViewById(R.id.matchContentProcessBar); 
+		
 		//初始化其他对象
 		db = new MatchDBDAO(this);
 		matchsTimeOrder = new ArrayList<Match>();
 		projects = new ArrayList<MatchProject>();
 		matchsProOrder = new HashMap<Integer, List<Match>>();
+		ClickEvent clickEvent = new ClickEvent();
 		//设计其他需要的操作
 		setMatchDateList();
+		//初始化已进入界面所取的数据
 		position = 0;
-		new MatchTask(PROJECT_ORDER).execute(null);
+		updateMatchContent();
+		matchTitle.setOnClickListener(clickEvent);
+		//监听刷新操作
+		refreshBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				updateMatchContent();				
+			}
+		});
 	}	
 
 
+	
 	/**
 	 * 设置比赛时间表
 	 */
@@ -114,9 +144,9 @@ public class MatchActivity extends Activity{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				matchsTimeOrder.clear();
+				
 				position = arg2;
-				new MatchTask(PROJECT_ORDER).execute(null);
+				updateMatchContent();
 			}
 			
 		});
@@ -144,12 +174,14 @@ public class MatchActivity extends Activity{
 		                titleView = (TextView)convertView;  
 		            }  		              
 		            titleView.setText(title);
+		            LogUtil.v("MAOXIA",title);
 		            titleView.setBackgroundColor(Color.rgb(219, 238, 244));
 		            return titleView;  
 				}
 			};
 			
 			for(MatchProject project:projects){
+				LogUtil.v("MAOXIAXIA",project.getName());
 				cAdapter.addCategory(project.getName(), new OrderByAdpter(matchsProOrder.get(project.getId())));
 			}		
 			matchList.setAdapter(cAdapter);
@@ -183,6 +215,7 @@ public class MatchActivity extends Activity{
 			Cursor c = db.query(matchDates[position]);
 			if(c.moveToFirst()){
 				do{	
+					
 					Match m = new Match(c.getInt(0));
 					m.setBjDate(c.getString(1));
 					m.setBjTime(c.getString(2));
@@ -297,6 +330,14 @@ public class MatchActivity extends Activity{
 		}
 	}
 	
+	private void updateMatchContent(){
+		refreshBtn.setVisibility(View.GONE);
+		matchList.setVisibility(View.GONE);
+		matchProgressBar.setVisibility(View.VISIBLE);
+		matchContentProgressBar.setVisibility(View.VISIBLE);
+		new MatchTask(orderShow).execute(null);
+	}
+	
 	private class MatchTask extends AsyncTask<Void, Void, Void>{
 		private int groupByWhat;
 		public MatchTask(int groupByWhat) {
@@ -305,6 +346,9 @@ public class MatchActivity extends Activity{
 		
 		@Override
 		protected Void doInBackground(Void... params) {
+			matchsTimeOrder.clear();
+			matchsProOrder.clear();
+			projects.clear();
 			loadData(groupByWhat);
 			return null;
 		}
@@ -312,6 +356,10 @@ public class MatchActivity extends Activity{
 		@Override
 		protected void onPostExecute(Void Void) {
 			setMatchContent(groupByWhat);
+			matchProgressBar.setVisibility(View.GONE);
+			matchContentProgressBar.setVisibility(View.GONE);
+			matchList.setVisibility(View.VISIBLE);
+			refreshBtn.setVisibility(View.VISIBLE);
 		}
 		
 	}
@@ -360,7 +408,7 @@ public class MatchActivity extends Activity{
 			holder.bjTime.setText(m.getBjTime());
 			holder.name.setText(m.getName());
 
-			LogUtil.v("MAOXIA",position+"");
+			LogUtil.v("MAOXIA",position+""+"    "+m.getName()+"  "+m.getBjTime());
 			
 			convertView.setBackgroundColor(Color.WHITE);
 //	         int[] colors = { Color.WHITE, Color.rgb(219, 238, 244) };//RGB颜色 
@@ -407,6 +455,57 @@ public class MatchActivity extends Activity{
 				view = date;
 			}
 			return view;
+		}
+		
+	}
+	
+	/**
+	 * 用于监听生成Title PopupWindow
+	 * @author Cater
+	 *
+	 */
+	private class ClickEvent implements OnClickListener{
+		private PopupWindow popupWindow;
+		private int screenWidth;
+		private int dialogWidth;
+		
+		@Override
+		public void onClick(View v) {
+			if(popupWindow!=null&&popupWindow.isShowing()){
+				popupWindow.dismiss();
+			}else{
+				getPopuWindow().showAsDropDown(v,(screenWidth-dialogWidth)/2,0);
+			}
+		}
+		
+		private PopupWindow getPopuWindow(){
+			
+			View popupWindow_view = getLayoutInflater().inflate(R.layout.match_show_list, null,false);
+			popupWindow = new PopupWindow(popupWindow_view, 220, 150, false);
+			TextView timeTxt = (TextView) popupWindow_view.findViewById(R.id.timeOrder_show);
+			TextView proTxt = (TextView) popupWindow_view.findViewById(R.id.proOrder_show);
+			timeTxt.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					orderShow = TIME_ORDER;
+					updateMatchContent();
+					popupWindow.dismiss();
+				}
+			});
+			proTxt.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					orderShow = PROJECT_ORDER;
+					updateMatchContent();
+					popupWindow.dismiss();
+				}
+			});
+			
+			screenWidth = MatchActivity.this.getWindowManager().getDefaultDisplay().getWidth();
+			dialogWidth = popupWindow.getWidth();
+			
+			
+			return popupWindow;
 		}
 		
 	}
