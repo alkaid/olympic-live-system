@@ -12,6 +12,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.coodroid.olympic.R;
+import com.coodroid.olympic.common.Constants;
+import com.coodroid.olympic.common.Constants.url;
+import com.coodroid.olympic.common.Constants.url.api;
 import com.coodroid.olympic.common.HttpUtils;
 import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.common.SystemUtil;
@@ -40,8 +43,6 @@ import android.widget.TextView;
  *
  */
 public class MedalActivity extends Activity{
-	/** 奖牌榜获取JSON的地址*/
-	private static final String medalUrl = "http://coodroid.com/ocdemo/index.php?route=olympic/medal";
 	/** 一页显示奖牌榜的最大值*/
 	private int maxPerPage = 20;
 	
@@ -208,7 +209,7 @@ public class MedalActivity extends Activity{
 			if(index!=null&&Integer.parseInt(index)>=0){
 				params.put("p1", index);
 			}
-			medalServerData = HttpUtils.getContent(medalUrl, HttpUtils.METHOD_GET, params, "utf-8");
+			medalServerData = HttpUtils.getContent(api.medal, HttpUtils.METHOD_GET, params, "utf-8");
 			LogUtil.i(medalServerData);
 		} catch (MalformedURLException e) {
 			LogUtil.e(e);
