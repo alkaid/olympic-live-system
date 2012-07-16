@@ -14,6 +14,7 @@ import com.coodroid.olympic.R;
 import com.coodroid.olympic.common.HttpUtils;
 import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.common.SystemUtil;
+import com.coodroid.olympic.common.Constants.url.api;
 import com.coodroid.olympic.data.MatchDBDAO;
 import com.coodroid.olympic.model.Match;
 import com.coodroid.olympic.model.MatchProject;
@@ -44,8 +45,6 @@ import android.widget.TextView;
  *
  */
 public class MatchActivity extends Activity{
-	/** 请求的链接 */
-	public static final String matchUrl = "http://coodroid.com/ocdemo/index.php?route=olympic/match";
 	/** 赛程表UI显示的赛程日 */
 	private String[] dates = {"7-26","7-27","开幕式","7-29","7-30","7-31","8-01",
 			"8-02","8-03","8-04","8-05","8-06","8-07","8-08","8-09","8-10","8-12","闭幕式"};
@@ -216,8 +215,8 @@ public class MatchActivity extends Activity{
 //					m.setLondonTime(c.getString(4));
 //					m.setPartOfProject(new MatchProject(c.getInt(5)));
 					m.setName(c.getString(6));
-					m.setHasTextLive(c.getInt(7));
-					m.setHasVideoLive(c.getInt(8));
+					m.setHasVideoLive(c.getInt(7));
+					m.setHasTextLive(c.getInt(8));
 					LogUtil.v("MAOXIA", m.getBjDate()+"   "+m.getBjTime()+"   "+m.getName());
 					matchsTimeOrder.add(m);
 				}while(c.moveToNext());
@@ -241,8 +240,8 @@ public class MatchActivity extends Activity{
 //					m.setLondonTime(c.getString(4));
 					m.setPartOfProject(new MatchProject(c.getInt(5)));
 					m.setName(c.getString(6));
-//					m.setHasTextLive(c.getInt(7));
-//					m.setHasVideoLive(c.getInt(8));
+//					m.setHasVideoLive(c.getInt(7));
+//					m.setHasTextLive(c.getInt(8));
 					LogUtil.v("MAOXIA", m.getBjDate()+"   "+m.getBjTime()+"   "+m.getName());
 					matchsProOrder.get(lastProjectId).add(m);					
 				}while(c.moveToNext());
@@ -266,7 +265,7 @@ public class MatchActivity extends Activity{
 			if(date!=null){
 				params.put("date", date);
 			}
-			matchServerData = HttpUtils.getContent(matchUrl, HttpUtils.METHOD_GET, params, "utf-8");
+			matchServerData = HttpUtils.getContent(api.match, HttpUtils.METHOD_GET, params, "utf-8");
 			LogUtil.i(matchServerData);
 		} catch (MalformedURLException e) {
 			LogUtil.e(e);
