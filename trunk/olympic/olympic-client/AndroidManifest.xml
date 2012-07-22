@@ -6,23 +6,38 @@
 
     <uses-sdk android:minSdkVersion="7" />
 
-    <application
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
+    <application android:name=".common.Global"
+        android:icon="@drawable/ic_launcher" android:label="@string/app_name" 
+        android:theme="@android:style/Theme.NoTitleBar">
         <activity
-            android:label="@string/app_name"
+            android:launchMode="singleInstance"
             android:name=".view.OlympicClientActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.MedalActivity" />
-        <activity android:name=".view.MatchActivity" />
-        <activity android:name=".view.LiveActivity" />
-        <activity android:name=".view.GuessActivity" />
-        <activity android:name=".view.MoreActivity" />
+        <activity android:name=".view.account.RegisterActivity"
+			android:launchMode="singleInstance" android:windowSoftInputMode="adjustPan">"
+           <!--  <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter> -->
+        </activity>
+        <activity android:name=".view.LotteryActivity" android:launchMode="singleInstance">
+            <!-- <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter> -->
+        </activity>
+        <activity android:name=".view.account.LoginActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".view.account.AccountActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".view.account.PwdModifyActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".view.MedalActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".view.MatchActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".view.LiveActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".view.GuessActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".view.MoreActivity" android:launchMode="singleInstance"/>
     </application>
 	<uses-permission android:name="android.permission.INTERNET" />    
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
