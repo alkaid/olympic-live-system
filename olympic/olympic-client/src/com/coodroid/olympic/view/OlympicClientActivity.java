@@ -5,12 +5,6 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.coodroid.olympic.R;
-import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.DBHelper;
-import com.coodroid.olympic.common.HttpUtils;
-import com.coodroid.olympic.common.LogUtil;
-
 import android.app.ActivityGroup;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +14,15 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.coodroid.olympic.R;
+import com.coodroid.olympic.common.Constants;
+import com.coodroid.olympic.common.DBHelper;
+import com.coodroid.olympic.common.Global;
+import com.coodroid.olympic.common.HttpRequest;
+import com.coodroid.olympic.common.LogUtil;
+
 public class OlympicClientActivity extends ActivityGroup {
-	
+	private Global global;
 	private LinearLayout container = null;
 	private RelativeLayout medalBtn = null;
 	private RelativeLayout matchBtn = null;
@@ -38,6 +39,7 @@ public class OlympicClientActivity extends ActivityGroup {
         //设置视图
 //        getData();
         setContentView(R.layout.main);
+        global=Global.getGlobal(this);
         init();
     }
     
@@ -155,15 +157,20 @@ public class OlympicClientActivity extends ActivityGroup {
     
     public void getData(){
     	try {
-			String url = "http://coodroid.com/ocdemo/index.php?route=olympic/match"; 
-			HttpUtils.setConnectionTimeout(3000);
-			HttpUtils.setRetryCount(0);
 			Map<String, String> params = new HashMap<String, String>();
 //			params.put("p1", "0");
 //			params.put("l", "10");
 //			params.put("v","0");
-			String data = HttpUtils.getContent(url, "GET", params, "utf-8");
-			LogUtil.i(data);
+			HttpRequest request=new HttpRequest();
+			String data=request
+					.setConnectionTimeout(3000)
+					.setRetryCount(0)
+					.setCookieStore(global.cookieStore)
+					.setUrl(Constants.url.api.match)
+					.setMethod(HttpRequest.METHOD_GET)
+					.setParams(params)
+					.setCharset("utf-8")
+					.getContent();
 		} catch (MalformedURLException e) {
 			LogUtil.e(e);
 		} catch (IOException e) {

@@ -6,19 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.coodroid.olympic.R;
-import com.coodroid.olympic.common.HttpUtils;
-import com.coodroid.olympic.common.LogUtil;
-import com.coodroid.olympic.common.SystemUtil;
-import com.coodroid.olympic.common.Constants.url.api;
-import com.coodroid.olympic.data.MatchDBDAO;
-import com.coodroid.olympic.model.Match;
-import com.coodroid.olympic.model.MatchProject;
-import com.coodroid.olympic.ui.CategoryAdapter;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -39,12 +30,24 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.coodroid.olympic.R;
+import com.coodroid.olympic.common.Constants;
+import com.coodroid.olympic.common.Global;
+import com.coodroid.olympic.common.HttpRequest;
+import com.coodroid.olympic.common.LogUtil;
+import com.coodroid.olympic.common.SystemUtil;
+import com.coodroid.olympic.data.MatchDBDAO;
+import com.coodroid.olympic.model.Match;
+import com.coodroid.olympic.model.MatchProject;
+import com.coodroid.olympic.ui.CategoryAdapter;
+
 /**
  * 赛程表的Activity
  * @author Cater
  *
  */
 public class MatchActivity extends Activity{
+	private Global global;
 	/** 赛程表UI显示的赛程日 */
 	private String[] dates = {"7-26","7-27","开幕式","7-29","7-30","7-31","8-01",
 			"8-02","8-03","8-04","8-05","8-06","8-07","8-08","8-09","8-10","8-12","闭幕式"};
@@ -86,6 +89,7 @@ public class MatchActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.match);
+		global=Global.getGlobal(this);
 		init();
 	}
 	
@@ -259,13 +263,20 @@ public class MatchActivity extends Activity{
 	public String getServerData(String date){
 		String matchServerData = null;
     	try {
-			HttpUtils.setConnectionTimeout(3000);
-			HttpUtils.setRetryCount(0);
 			Map<String, String> params = new HashMap<String, String>();
 			if(date!=null){
 				params.put("date", date);
 			}
-			matchServerData = HttpUtils.getContent(api.match, HttpUtils.METHOD_GET, params, "utf-8");
+			HttpRequest request=new HttpRequest();
+			matchServerData=request
+					.setConnectionTimeout(3000)
+					.setRetryCount(0)
+					.setCookieStore(global.cookieStore)
+					.setUrl(Constants.url.api.match)
+					.setMethod(HttpRequest.METHOD_GET)
+					.setParams(params)
+					.setCharset("utf-8")
+					.getContent();
 			LogUtil.i(matchServerData);
 		} catch (MalformedURLException e) {
 			LogUtil.e(e);
