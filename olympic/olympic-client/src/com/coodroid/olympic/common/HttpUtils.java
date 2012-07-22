@@ -18,7 +18,6 @@ import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -74,7 +73,7 @@ public class HttpUtils {
 	/** 恢复默认配置 <br/>
 	 * 连接超时：3000ms  请求超时:5000ms 重试次数：3次*/
 	public static void setDefaultConfig(){
-		DefaultHttpClient client=(DefaultHttpClient) getHttpClient();
+		DefaultHttpClient client= getHttpClient();
 		client.getParams().setParameter(
 				CoreConnectionPNames.CONNECTION_TIMEOUT, TIMEOUT_CONN);
 		client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,
@@ -86,24 +85,24 @@ public class HttpUtils {
 	}
 	/** 设置连接超时时间 */
 	public static void setConnectionTimeout(int time){
-		DefaultHttpClient client=(DefaultHttpClient) getHttpClient();
+		DefaultHttpClient client= getHttpClient();
 		client.getParams().setParameter(
 				CoreConnectionPNames.CONNECTION_TIMEOUT, time);
 	}
 	/** 设置请求超时时间 */
 	public static void setSocketTimeout(int time){
-		DefaultHttpClient client=(DefaultHttpClient) getHttpClient();
+		DefaultHttpClient client= getHttpClient();
 		client.getParams().setParameter(
 				CoreConnectionPNames.SO_TIMEOUT, time);
 	}
 	/** 设置重试次数 */
 	public static void setRetryCount(int count){
-		DefaultHttpClient client=(DefaultHttpClient) getHttpClient();
+		DefaultHttpClient client= getHttpClient();
 		client.setHttpRequestRetryHandler(new RetryHandler(count));
 	}
 	/** 设置请求重试异常处理 */
 	public static void setRequestRetryHandler(HttpRequestRetryHandler handler){
-		DefaultHttpClient client=(DefaultHttpClient) getHttpClient();
+		DefaultHttpClient client= getHttpClient();
 		client.setHttpRequestRetryHandler(handler);
 	}
 
@@ -272,7 +271,7 @@ public class HttpUtils {
 	 * 
 	 * @return
 	 */
-	public static HttpClient creatThreadSafeClient() {
+	public static DefaultHttpClient creatThreadSafeClient() {
 		BasicHttpParams params = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(params, TIMEOUT_CONN);
 		HttpConnectionParams.setSoTimeout(params, TIMEOUT_SOCKET);
@@ -294,7 +293,7 @@ public class HttpUtils {
 
 	/** 此类存在的目的仅仅是为了能够返回一个线程安全的单例 */
 	private static class clientHolder {
-		static HttpClient client;
+		static DefaultHttpClient client;
 		static {
 			client = creatThreadSafeClient();
 		}
@@ -303,7 +302,7 @@ public class HttpUtils {
 	/**
 	 * 获得一个线程安全并且是单例模式的HttpClient
 	 */
-	public static HttpClient getHttpClient() {
+	public static DefaultHttpClient getHttpClient() {
 		return clientHolder.client;
 	}
 	
@@ -374,7 +373,7 @@ public class HttpUtils {
 			Map<String, String> params, Map<String, String> header)
 			throws IOException {
 		LogUtil.i("---url---"+url);
-		HttpClient client = getHttpClient();
+		DefaultHttpClient client = getHttpClient();
 		HttpUriRequest req = null;
 		// url添加get参数
 		if (method.equals(METHOD_GET)) {
@@ -426,7 +425,7 @@ public class HttpUtils {
 			String entityStr, Map<String, String> header)
 			throws IOException {
 		LogUtil.i("---url---"+url);
-		HttpClient client = getHttpClient();
+		DefaultHttpClient client = getHttpClient();
 		HttpUriRequest req = null;
 		// url添加get参数
 		if (method.equals(METHOD_GET)) {
@@ -494,7 +493,7 @@ public class HttpUtils {
 		return request(url, method, entityStr, null);
 	}
 	public static void close(){
-		HttpClient client=getHttpClient();
+		DefaultHttpClient client=getHttpClient();
 		client.getConnectionManager().shutdown();
 	}
 
