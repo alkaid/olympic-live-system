@@ -42,7 +42,7 @@ import android.text.TextUtils;
  *
  */
 public class HttpRequest {
-	public static final String TAG="HttpUtils";
+	public static final String TAG="HttpRequest";
 	
 	public static final String METHOD_GET = "GET";
 	public static final String METHOD_POST = "POST";

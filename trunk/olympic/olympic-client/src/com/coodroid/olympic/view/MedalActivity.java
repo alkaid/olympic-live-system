@@ -11,18 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.coodroid.olympic.R;
-import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Constants.url;
-import com.coodroid.olympic.common.Constants.url.api;
-import com.coodroid.olympic.common.HttpUtils;
-import com.coodroid.olympic.common.LogUtil;
-import com.coodroid.olympic.common.SystemUtil;
-import com.coodroid.olympic.data.MedalDBDAO;
-import com.coodroid.olympic.model.Medal;
-import com.coodroid.olympic.ui.PullListView;
-import com.coodroid.olympic.ui.PullListView.OnRefreshListener;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -37,12 +25,24 @@ import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.coodroid.olympic.R;
+import com.coodroid.olympic.common.Constants;
+import com.coodroid.olympic.common.Global;
+import com.coodroid.olympic.common.HttpRequest;
+import com.coodroid.olympic.common.LogUtil;
+import com.coodroid.olympic.common.SystemUtil;
+import com.coodroid.olympic.data.MedalDBDAO;
+import com.coodroid.olympic.model.Medal;
+import com.coodroid.olympic.ui.PullListView;
+import com.coodroid.olympic.ui.PullListView.OnRefreshListener;
+
 /**
  * 奖牌榜的Activity
  * @author Cater
  *
  */
 public class MedalActivity extends Activity{
+	private Global global;
 	/** 一页显示奖牌榜的最大值*/
 	private int maxPerPage = 20;
 	
@@ -63,6 +63,7 @@ public class MedalActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.medal);	
+		global=Global.getGlobal(this);
 		findview();
 		init();
 
@@ -200,8 +201,6 @@ public class MedalActivity extends Activity{
 	public String getServerData(String index,String length){
 		String medalServerData = null;
     	try {
-			HttpUtils.setConnectionTimeout(3000);
-			HttpUtils.setRetryCount(0);
 			Map<String, String> params = new HashMap<String, String>();
 			if(length!=null&&Integer.parseInt(length)>0){
 				params.put("l", length);
@@ -209,7 +208,16 @@ public class MedalActivity extends Activity{
 			if(index!=null&&Integer.parseInt(index)>=0){
 				params.put("p1", index);
 			}
-			medalServerData = HttpUtils.getContent(api.medal, HttpUtils.METHOD_GET, params, "utf-8");
+			HttpRequest request=new HttpRequest();
+			medalServerData=request
+					.setConnectionTimeout(3000)
+					.setRetryCount(0)
+					.setCookieStore(global.cookieStore)
+					.setUrl(Constants.url.api.medal)
+					.setMethod(HttpRequest.METHOD_GET)
+					.setParams(params)
+					.setCharset("utf-8")
+					.getContent();
 			LogUtil.i(medalServerData);
 		} catch (MalformedURLException e) {
 			LogUtil.e(e);
