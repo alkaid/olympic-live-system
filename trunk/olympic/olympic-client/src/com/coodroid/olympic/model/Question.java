@@ -6,7 +6,8 @@ package com.coodroid.olympic.model;
  *
  */
 
-public class Question {
+public class Question extends Model{
+	private static final long serialVersionUID = -4704346955675851460L;
 	/** 一个问题的唯一id */
 	private int id;
 	/** 问题的序号 */

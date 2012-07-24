@@ -7,7 +7,8 @@ import java.util.Date;
  * @author Cater
  *
  */
-public class Match {
+public class Match extends Model{
+	private static final long serialVersionUID = -8021714607471331788L;
 	/** 比赛所对应的ID*/
 	private int id;
 	/** 比赛日期(北京时间)*/

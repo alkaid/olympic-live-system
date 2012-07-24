@@ -12,11 +12,16 @@ public class Constants {
 		public static class api{
 			public static final String medal=api_root+"medal";
 			public static final String match=api_root+"match";
+			public static final String textlive=api_root+"textlive";
 		}
 		public static class user{
 			public static final String register=user_root+"register";
 			public static final String login=user_root+"login";
 			public static final String modifypwd=user_root+"modifypwd";
 		}
+	}
+	public static class bundleKey{
+		/**正在直播的比赛的信息*/
+		public static final String matchOfLive = "matchOfLive";
 	}
 }

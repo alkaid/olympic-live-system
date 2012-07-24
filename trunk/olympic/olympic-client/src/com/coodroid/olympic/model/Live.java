@@ -4,7 +4,8 @@ package com.coodroid.olympic.model;
  * @author Cater
  *
  */
-public class Live {
+public class Live extends Model{
+	private static final long serialVersionUID = -7390634935428378909L;
 	/** 直播数据的Id*/
 	private int id;
 	/** 比赛的Id*/
