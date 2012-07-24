@@ -11,6 +11,7 @@
         android:layout_gravity="bottom" android:orientation="horizontal"
         android:layout_width="fill_parent" android:layout_height="wrap_content">
         
+        
         <!-- 奖牌榜模块按钮 -->
         <RelativeLayout android:id="@+id/btnMedal" android:background="@android:color/background_light"
             android:layout_marginLeft="7dp" android:layout_marginTop="3dp"

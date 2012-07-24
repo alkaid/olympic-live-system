@@ -146,7 +146,6 @@ public class MedalActivity extends Activity{
 			medalTitleProgressBar.setVisibility(View.GONE);
 			medalList.setVisibility(View.VISIBLE);
 			medalContentProgressBar.setVisibility(View.GONE);
-			
 		}
 		
 	}

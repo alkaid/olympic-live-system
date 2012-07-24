@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="live_select_color">#1E90FF</color>
+    <color name="live_noselect_color">#F4F4F4</color>
+    <color name="text_live_bg">#FFFFFF</color>
+    <color name="text_live_style">#000000</color>
+</resources>

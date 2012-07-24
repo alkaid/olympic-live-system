@@ -10,6 +10,7 @@ import android.database.Cursor;
 import com.coodroid.olympic.common.Constants;
 import com.coodroid.olympic.common.DBHelper;
 import com.coodroid.olympic.model.Live;
+import com.coodroid.olympic.model.Match;
 /**
  * 这个类包含了一系列直播模块的数据库操作
  * @author Cater
@@ -17,7 +18,7 @@ import com.coodroid.olympic.model.Live;
  */
 public class LiveDBDAO{
 	
-	public static final String liveTable="lo_textLive";
+	public static final String liveTable="lo_textlive";
 	private DBHelper db = null;
 	
 	public LiveDBDAO(Context context) {
@@ -46,6 +47,7 @@ public class LiveDBDAO{
 	 * @param medal live更新的直播记录
 	 */
 	public void update(Live live){
+		
 		//创建list用于增加
 		List<String> updates = new ArrayList<String>();
 		List<String> matchs = new ArrayList<String>();
@@ -55,18 +57,31 @@ public class LiveDBDAO{
 			updates.add("_matchId="+live.getMatchId());
 		}
 		if(live.getServetTime()!=null){
-			updates.add("_serverTime="+live.getServetTime());
+			updates.add("_serverTime="+"'"+db.formatSQL(live.getServetTime())+"'");
 		}
 		if(live.getScore()!=null){
-			updates.add("_score="+live.getScore());
+			updates.add("_score="+"'"+db.formatSQL(live.getScore())+"'");
 		}
 		if(live.getTextTime()!=null){
-			updates.add("_textTime="+live.getTextTime());
+			updates.add("_textTime="+"'"+db.formatSQL(live.getTextTime())+"'");
 		}
 		if(live.getText()!=null){
-			updates.add("_text="+live.getText());
+			updates.add("_text="+"'"+db.formatSQL(live.getText())+"'");
 		}
 		db.update(liveTable, updates, matchs);			
+	}
+	/**
+	 * 数据表里有记录采用更新，无记录采用插入操作
+	 * @param live
+	 */
+	public void addOrUpdate(Live live){
+		List<String> lives = new ArrayList<String>();
+		lives.add("_id="+"'"+live.getId()+"'");
+		if(db.query(liveTable, null, lives)!=null){
+			update(live);
+		}else{
+			add(live);
+		}
 	}
 	
 	/**
@@ -78,20 +93,28 @@ public class LiveDBDAO{
 		deletes.add(id);
 		db.delete(liveTable, deletes);
 	}
-	
-	/**
-	 * 查询第几页的记录
-	 * @param page第几页
-	 * @param resultMax每页多少记录
+
+	/**这个方法是用于查询直播表里某一场比赛某一页的记录，排列方式按倒序
+	 * @param matchId要查询的比赛Id
+	 * @param pageNum要查询第几页
+	 * @param indexPerPage 每页几行
+	 * @return
 	 */
-	public Cursor queryPaging(int page,int maxResult){
-		int firstResult = (page-1)*maxResult;
-		return db.queryPaging(liveTable,null, firstResult, maxResult);
+	public Cursor query(int matchId,int pageNum,int indexPerPage){
+		return db.query("SELECT * FROM (SELECT * FROM("+"SELECT *  FROM "+liveTable+" WHERE _matchId="+matchId+
+				" ORDER BY _id DESC"+")  LIMIT "+indexPerPage+" OFFSET "+indexPerPage*(pageNum-1)+") ORDER BY _id");
 	}
 	
-//	public Cursor query(String date){
-//		
-//	}
+	
+	
+	/**
+	 * 根据比赛Id查询最大直播记录
+	 * @param matchId
+	 * @return
+	 */
+	public Cursor queryTextLiveId(int matchId){
+		return db.query("SELECT MAX(_id) _id FROM "+liveTable+" WHERE _matchId="+matchId);
+	}
 	
 	/**
 	 * 用于关闭数据库操作

@@ -5,7 +5,8 @@ package com.coodroid.olympic.model;
  * @author Cater
  *
  */
-public class Answer {
+public class Answer extends Model{
+	private static final long serialVersionUID = 1062020598712366955L;
 	/** 一条答案的唯一id*/
 	private int id;
 	/** 答案所处的序列 */
