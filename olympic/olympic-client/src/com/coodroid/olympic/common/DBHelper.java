@@ -181,18 +181,24 @@ public class DBHelper extends SQLiteOpenHelper{
 			StringBuffer updateStr = new StringBuffer();
 			StringBuffer matchStr = new StringBuffer();
 			//拼接需要update的值，即set后，where之前的值
-			for(String update:updates){
-				updateStr.append(update+",");
+			if(updates!=null){
+				for(String update:updates){
+					updateStr.append(update+",");
+				}
+				updateStr.deleteCharAt(updateStr.length()-1);
 			}
 			//拼接匹配的条件，where之后的值
-			for(String match:matchs){
-				matchStr.append(match+",");
+			if(matchs!=null){
+				for(String match:matchs){
+					matchStr.append(match+",");
+				}
+				matchStr.replace(matchStr.length()-1, matchStr.length(), ";");
 			}
-			updateStr.deleteCharAt(updateStr.length()-1);
-			matchStr.replace(matchStr.length()-1, matchStr.length(), ";");
-			String sql = "UPDATE "+table+" set "+updateStr+" WHERE "+matchStr;
-LogUtil.i(sql);
-			db.execSQL(sql);
+			if(updates!=null&&matchs!=null){
+				String sql = "UPDATE "+table+" set "+updateStr+" WHERE "+matchStr;
+				LogUtil.i(sql);
+				db.execSQL(sql);
+			}		
 		} catch (SQLException e) {
 			LogUtil.e(e);
 			LogUtil.e("更新sql语句出错");

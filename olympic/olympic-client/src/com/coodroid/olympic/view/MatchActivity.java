@@ -297,7 +297,7 @@ public class MatchActivity extends Activity{
 			List<Match> matchs = new ArrayList<Match>();
 			try {
 				JSONObject matchJSON = new JSONObject(matchServerData);
-				if(matchJSON.getString("staus").equals("2")){
+				if(matchJSON.getString("status").equals("2")){
 					JSONArray matchArray = matchJSON.getJSONArray("data");
 					for(int i=0;i<matchArray.length();i++){
 						JSONObject matchObject = (JSONObject) matchArray.opt(i);

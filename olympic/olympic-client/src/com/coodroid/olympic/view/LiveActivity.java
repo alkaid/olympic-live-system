@@ -120,9 +120,6 @@ public class LiveActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.live);
 		global=Global.getGlobal(this);
-//		LogUtil.v("DAXIAMAO",SystemUtil.getCurrentDate());
-//		LogUtil.v("DAXIAMAO",SystemUtil.getCurrentTime());
-//		test();
 		init();
 		refresh();
 		tagListen();
@@ -195,10 +192,8 @@ public class LiveActivity extends Activity{
 				container.removeAllViews();
 				container.addView(((ActivityGroup)LiveActivity.this.getParent()).getLocalActivityManager()
 							.startActivity("TextLiveActivity", 
-								new Intent(LiveActivity.this,TextLiveActivity.class))
+								intent)
 								.getDecorView());
-//				LiveActivity.this.startActivity(intent);
-//				　　((ActivityGroup)b.this.getParent()).getLocalActivityManager().removeAllActivities();
 			}
 			
 		});
@@ -330,7 +325,7 @@ public class LiveActivity extends Activity{
 			List<Match> matchs = new ArrayList<Match>();
 			try {
 				JSONObject matchJSON = new JSONObject(matchServerData);
-				if(matchJSON.getString("staus").equals("2")){
+				if(matchJSON.getString("status").equals("2")){
 					JSONArray matchArray = matchJSON.getJSONArray("data");
 					for(int i=0;i<matchArray.length();i++){
 						JSONObject matchObject = (JSONObject) matchArray.opt(i);
@@ -478,19 +473,6 @@ public class LiveActivity extends Activity{
 		TextView liveTimeTv;
 		TextView liveNameTv;	
 	}
-//	private void test(){
-//		loadData();
-//		for(Match match:livingMatchs){
-//			LogUtil.v("LIVING",match.getBjDate()+"   "+match.getBjTime()+"   "+match.getHasTextLive());
-//		}
-//		for(Match match:willLiveMatchs){
-//			LogUtil.v("WILL",match.getBjDate()+"   "+match.getBjTime()+"   "+match.getHasTextLive());
-//		}
-//		for(Match match:liveEndMatchs){
-//			LogUtil.v("END",match.getBjDate()+"   "+match.getBjTime()+"   "+match.getHasTextLive());
-//		}
-//	}
-	
 	/**
 	 * 用于监听生成Title PopupWindow
 	 * @author Cater

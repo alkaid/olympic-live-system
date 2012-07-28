@@ -61,22 +61,15 @@ CREATE TABLE lo_answer
 DROP TABLE IF EXISTS "lo_answer2question" ;
 CREATE TABLE lo_answer2question 
 ( 
-  _answerId varchar(255) NOT NULL CONSTRAINT fk_answer_id REFERENCES lo_answer (_id) ON DELETE CASCADE , 
-  _questionId varchar(255) NOT NULL CONSTRAINT fk_question_id REFERENCES lo_question (_id) ON DELETE CASCADE 
+  _answerId int(10) NOT NULL CONSTRAINT fk_answer_id REFERENCES lo_answer (_id) ON DELETE CASCADE , 
+  _questionId int(10) NOT NULL CONSTRAINT fk_question_id REFERENCES lo_question (_id) ON DELETE CASCADE 
 ) ;
-DROP TABLE IF EXISTS "lo_user";
-CREATE TABLE "lo_user" (
-   _id varchar(255) NOT NULL PRIMARY KEY,
-   _name varchar(255) NOT NULL ,
-   _password varchar(255) NOT NULL,
-   _questionScore int(11) NOT NULL default '0'
-);
-DROP TABLE IF EXISTS "lo_user_answer" ;
-CREATE TABLE lo_user_answer 
-( _id varchar(255) NOT NULL CONSTRAINT fk_user_id REFERENCES lo_user(_id) ON DELETE CASCADE ON UPDATE CASCADE,
-  _questionId int(10) NOT NULL CONSTRAINT fk_question_id REFERENCES lo_question(_id) ON DELETE CASCADE ON UPDATE CASCADE, 
-  _answerId int(10) NOT NULL  CONSTRAINT fk_answer_id REFERENCES lo_answer(_id) ON DELETE CASCADE ON UPDATE CASCADE,
-  _isRight bit(1) NOT NULL   
+DROP TABLE IF EXISTS "lo_user_answers" ;
+CREATE TABLE lo_user_answers 
+( 
+  _questionId int(10) NOT NULL CONSTRAINT fk_question_id REFERENCES lo_question(_id) ON DELETE CASCADE, 
+  _answerId int(10) NOT NULL CONSTRAINT fk_answer_id REFERENCES lo_answer(_id) ON DELETE CASCADE,
+  _isRight int(10)    
 ) ;
 INSERT INTO lo_project VALUES ('1', '蹦床');
 INSERT INTO lo_project VALUES ('2', '闭幕式');

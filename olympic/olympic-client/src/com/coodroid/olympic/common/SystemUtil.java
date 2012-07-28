@@ -86,6 +86,15 @@ public class SystemUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		return sdf.format(date);
 	}
+	
+	/**
+	 * 获取当前手机的系统时间年月日时分秒
+	 */
+	public static String getCurrentDateTime(){
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sdf.format(date);
+	}
 
 	/**
 	 * 获得DisplayMetrics

@@ -101,8 +101,8 @@ public class LiveDBDAO{
 	 * @return
 	 */
 	public Cursor query(int matchId,int pageNum,int indexPerPage){
-		return db.query("SELECT * FROM (SELECT * FROM("+"SELECT *  FROM "+liveTable+" WHERE _matchId="+matchId+
-				" ORDER BY _id DESC"+")  LIMIT "+indexPerPage+" OFFSET "+indexPerPage*(pageNum-1)+") ORDER BY _id");
+		return db.query("SELECT * FROM("+"SELECT *  FROM "+liveTable+" WHERE _matchId="+matchId+
+				" ORDER BY _id DESC"+")  LIMIT "+indexPerPage+" OFFSET "+indexPerPage*(pageNum-1));
 	}
 	
 	

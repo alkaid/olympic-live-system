@@ -237,7 +237,7 @@ public class MedalActivity extends Activity{
 			List<Medal> medals = new ArrayList<Medal>();
 			try {
 				JSONObject medalJSON = new JSONObject(medalServerData);
-				if(medalJSON.getString("staus").equals("2")){
+				if(medalJSON.getString("status").equals("2")){
 					JSONArray medalArray = medalJSON.getJSONArray("data");
 					for(int i=0;i<medalArray.length();i++){
 						JSONObject medalObject = (JSONObject) medalArray.opt(i);

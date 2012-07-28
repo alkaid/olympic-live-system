@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -55,9 +56,15 @@ public class TextLiveActivity extends Activity{
 	private static final int LOAD_DATA_FINISH = 1;
 	/**用于标识load数据开始*/
 	private static final int LOAD_DATA_START =2;
+	/**用于标识上一页标志可点击*/
+	private static final int LAST_PAGE_ISONCLICK = 3;
+	/**用于标识下一页标志可点击*/
+	private static final int NEXT_PAGE_ISONCLICK = 4;
 	
 	/**显示第几页*/
 	private int pageNum = 1;
+	/**标记是否是最后一页*/
+	private boolean isFinalPage =false;
 	/**存放需要显示的文字直播记录*/
 	private List<Live> textLives;
 	/**刷新标识*/
@@ -68,6 +75,8 @@ public class TextLiveActivity extends Activity{
 	private Button refreshTab;
 	private ImageView refreshBtn;
 	private ProgressBar textliveProgressBar;
+	private ImageView lastPageMark;
+	private ImageView nextPageMark;
 	
 	/**用于操作直播的db*/
 	private LiveDBDAO db;
@@ -93,6 +102,8 @@ public class TextLiveActivity extends Activity{
 		refreshTab = (Button) findViewById(R.id.refresh_tab);
 		refreshBtn = (ImageView) findViewById(R.id.refresh_btn);
 		textliveProgressBar = (ProgressBar) findViewById(R.id.liveProcessBar);
+		lastPageMark = (ImageView) findViewById(R.id.text_live_last_page);
+		nextPageMark = (ImageView) findViewById(R.id.text_live_next_page);
 		//其他初始化
 		db = new LiveDBDAO(this);
 		mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -126,6 +137,74 @@ public class TextLiveActivity extends Activity{
 			}
 		});
 		new AutoRefreshThread().start();
+	}
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		if(event.getAction() == MotionEvent.ACTION_DOWN){
+			new ISFinalPageAsyncTask().execute(null);
+			//判断上一页逻辑
+			if(pageNum==1){
+				lastPageMark.setVisibility(View.GONE);
+			}else{
+				lastPageMark.setVisibility(View.VISIBLE);
+				new Thread(){
+						public void run() {
+							lastPageMark.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									pageNum = pageNum -1;
+									new RefreshAsyncTask().execute(null); 
+								}
+							});
+							try {
+								Thread.sleep(5000);
+							} catch (InterruptedException e) {
+								LogUtil.e("下一页图标出现，休眠时间被打断");
+							}
+						};
+				}.start();				
+			}
+			//判断下一页逻辑
+			if(isFinalPage){
+				nextPageMark.setVisibility(View.GONE);
+			}else{
+				nextPageMark.setVisibility(View.VISIBLE);
+				new Thread(){
+					public void run() {
+						nextPageMark.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								pageNum = pageNum +1;
+								new RefreshAsyncTask().execute(null); 
+							}
+						});
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							LogUtil.e("下一页图标出现，休眠时间被打断");
+						}
+					};
+				}.start();				
+				
+			}
+		}
+		return super.onTouchEvent(event);
+	}
+	
+	private class ISFinalPageAsyncTask extends AsyncTask<Void, Void, Boolean>{
+				
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			Cursor c = db.query(matchId, pageNum+1, INDEX_PER_PAGE);
+			if(c.getCount()==0){
+				isFinalPage = true;
+			}
+			return isFinalPage;
+		}
+		
+		private boolean isFinalPage(){
+			return isFinalPage;
+		}
 	}
 	
 	/**
@@ -178,13 +257,6 @@ public class TextLiveActivity extends Activity{
 		Cursor c = db.query(Integer.parseInt(matchId), pageNum, INDEX_PER_PAGE);
 		if(c.moveToFirst()){
 			do{
-				int columnIndex = c.getColumnIndex("_id");
-				LogUtil.e("NIUNIUNIU",c.getInt(columnIndex)+"");
-				
-			}while(c.moveToNext());
-		}
-		if(c.moveToFirst()){
-			do{
 				Live l = new Live(c.getInt(0));
 				l.setMatchId(c.getInt(1));
 				l.setServetTime(c.getString(2));
@@ -203,8 +275,7 @@ public class TextLiveActivity extends Activity{
 	 * @param matchId 请求的参数 表示直播比赛的Id
 	 * @param textLiveId 表示最大直播id数
 	 * @return JSON用于解析
-	 */
-	
+	 */	
 	public String getServerData(String matchId,String textLiveId){
 		String matchServerData = null;
     	try {
@@ -243,7 +314,7 @@ public class TextLiveActivity extends Activity{
 			List<Live> lives = new ArrayList<Live>();
 			try {
 				JSONObject matchJSON = new JSONObject(matchServerData);
-				if(matchJSON.getString("staus").equals("2")){
+				if(matchJSON.getString("status").equals("2")){
 					JSONArray textLiveArray = matchJSON.getJSONArray("data");
 					for(int i=0;i<textLiveArray.length();i++){
 						JSONObject textLiveObject = (JSONObject) textLiveArray.opt(i);
@@ -294,16 +365,9 @@ public class TextLiveActivity extends Activity{
 			}else{
 				holder = (ViewHolder) convertView.getTag();				
 			}
-			
 			Live l = textLives.get(position);
 			holder.text.setText(l.getText());
-
-			LogUtil.v("MAOXIA",position+""+"    "+l.getId()+"     "+l.getText());
-			
 			convertView.setBackgroundColor(Color.WHITE);
-//	         int[] colors = { Color.WHITE, Color.rgb(219, 238, 244) };//RGB颜色 
-//	         view.setBackgroundColor(colors[position % 2]);// 每隔item之间颜色不同
-			 
 			return convertView;
 		}
 		
@@ -331,7 +395,6 @@ public class TextLiveActivity extends Activity{
 		
 		@Override
 		public void run() {
-			int i =1;
 			while(refreshState == AUTO_REFRESH){
 				handler.sendEmptyMessage(LOAD_DATA_START);
 				loadData(matchId+"");
@@ -342,8 +405,6 @@ public class TextLiveActivity extends Activity{
 					LogUtil.e(e);
 					LogUtil.e("自动刷新休眠时间被打断");
 				}
-				i=i+1;
-				LogUtil.e("MAOMAOMAOMAOXIA",i+"");
 			}
 		}
 	}
