@@ -66,13 +66,14 @@ public class LoginActivity extends Activity {
 	private CookieStore cookieStore;
 	private Global global;
 	private User user;
+	private String from;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		context=this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		global=Global.getGlobal(this);
-		
+		from=getIntent().getStringExtra("from");
 		initForm();
 		
 		//init Button
@@ -176,9 +177,10 @@ public class LoginActivity extends Activity {
 			break;
 		case status_logged:
 			Toast.makeText(context, msg_logged, Toast.LENGTH_LONG).show();
-			Intent intent=new Intent(context, OlympicClientActivity.class);
+//			Intent intent=new Intent(context, OlympicClientActivity.class);
+			Intent intent=null!=from?new Intent(from):new Intent(context, OlympicClientActivity.class);;
 			startActivity(intent);
-//			finish();
+			finish();
 			break;
 		case status_failed:
 			Toast.makeText(context, msg_failed, Toast.LENGTH_LONG).show();

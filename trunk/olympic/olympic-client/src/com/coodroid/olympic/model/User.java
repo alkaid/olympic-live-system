@@ -21,9 +21,12 @@ public class User extends Model {
 	private static final String FIELD_UNICK="kcnw";
 	private static final String FIELD_PASSWORD="dcne";
 	
+	private int id;
 	private String email;
 	private String unick;
 	private String password;
+	private int questionScore;
+	private int state;
 	
 	public User(){}
 	
@@ -31,6 +34,10 @@ public class User extends Model {
 		this.email=email;
 		this.unick=unick;
 		this.password=password;
+	}
+	
+	public User(int id){
+		this.id = id;
 	}
 	
 	public void save(Context context){
@@ -107,5 +114,26 @@ public class User extends Model {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public int getQuestionScore() {
+		return questionScore;
+	}
+
+	public void setQuestionScore(int questionScore) {
+		this.questionScore = questionScore;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+	
 	
 }

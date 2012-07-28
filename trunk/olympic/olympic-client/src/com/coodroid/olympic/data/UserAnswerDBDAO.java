@@ -10,27 +10,28 @@ import android.database.Cursor;
 import com.coodroid.olympic.common.Constants;
 import com.coodroid.olympic.common.DBHelper;
 import com.coodroid.olympic.model.Answer;
-import com.coodroid.olympic.model.Live;
 import com.coodroid.olympic.model.Question;
+
 /**
- * 这个类包含了竞猜模块一系列的数据库操作
- * @author Cater
+ * 用做用户历史数据的操作
+ * @author Joys
  *
  */
-public class GuessDBDAO{
+public class UserAnswerDBDAO {
 	
 	public static final String questionTable="lo_question";
-	public static final String answerTable="lo_answer";
+	public static final String userAnswerTable="lo_user_answers";
 	public static final String answer2questionTable="lo_answer2question";
+	public static final String answerTable = "lo_answer";
 	private DBHelper db = null;
 	
-	public GuessDBDAO(Context context) {
+	public UserAnswerDBDAO(Context context) {
 		db = DBHelper.getInstance(context, Constants.OlympicDB);
 		db.open();
 	}
 	
 	/**
-	 * 增加一条问题到相应的表中，包含的表有lo_question,lo_answer2question,lo_answer
+	 * 增加一条问题到相应的表中，包含的表有lo_question,lo_answer2question,lo_user_answer
 	 * @param question 一条问题
 	 */
 	public void add(Question question){
@@ -59,14 +60,14 @@ public class GuessDBDAO{
 				cvAnswer.put("_id", answer.getId());
 				cvAnswer.put("_order",answer.getOrder());
 				cvAnswer.put("_text", answer.getText());
-//				cvAnswer.put("_isRight", answer.getIsRight());
 				db.insert(answerTable, cvAnswer);
 			}
-		}		
+		}
+	
 	}
 	
 	/**
-	 * 更新一条数据到lo_question表里和lo_answer表里
+	 * 更新一条数据到lo_question表里和lo_user_answer表里
 	 * @param question 一条问题
 	 */
 	public void questionUpdate(Question question){
@@ -105,9 +106,6 @@ public class GuessDBDAO{
 					if(answer.getOrder()!=-1){
 						answerUpdates.add("_order="+answer.getOrder());
 					}
-//					if(answer.getQuestionId()!=-1){
-//						answerUpdates.add("_questionId="+answer.getQuestionId());
-//					}
 					if(answer.getText()!=null){
 						answerUpdates.add("_text="+"'"+db.formatSQL(answer.getText())+"'");
 					}
@@ -115,7 +113,49 @@ public class GuessDBDAO{
 				}
 			}
 		}
-		db.update(questionTable, updates, matchs);			
+		db.update(questionTable, updates, matchs);	
+
+		
+	}
+	
+	
+	/**
+	 * 用于更新用户答题
+	 * @param question
+	 */
+	public void userAnswerUpdate(Question question){
+		//更新用户答题记录
+		Answer userAnswer = question.getAnswer();
+		List<String> userAnswerUpdates = new ArrayList<String>();
+		List<String> userAnswerMatchs = new ArrayList<String>();
+		userAnswerMatchs.add("_answerId="+userAnswer.getId());
+		List<String> userAnswerQueryMatchs = new ArrayList<String>();
+		userAnswerQueryMatchs.add("_answerId="+"'"+userAnswer.getId()+"'");
+		if(db.query(userAnswerTable, null, userAnswerQueryMatchs)!=null){
+			if(userAnswer.getId()!=-1){
+				userAnswerUpdates.add("_answerId="+userAnswer.getId());
+			}
+			if(userAnswer.getQuestionId()!=-1){
+				userAnswerUpdates.add("_questionId="+userAnswer.getQuestionId());
+			}
+			if(userAnswer.getIsRight()!=-1){
+				userAnswerUpdates.add("_isRight="+userAnswer.getIsRight());
+			}
+			db.update(userAnswerTable, userAnswerUpdates, userAnswerMatchs);
+		}
+	}
+	
+	public void userAnswerAdd(Question question){
+		//插入用户答题记录
+		ContentValues cvUserAnswer = new ContentValues();
+		List<String> userAnswerMatchs = new ArrayList<String>();
+		userAnswerMatchs.add("_answerId="+"'"+question.getAnswer().getId()+"'");
+		if(db.query(userAnswerTable, null, userAnswerMatchs)==null){
+			cvUserAnswer.put("_answerId", question.getAnswer().getId());
+			cvUserAnswer.put("_questionId", question.getAnswer().getQuestionId());
+			cvUserAnswer.put("_isRight", question.getAnswer().getIsRight());
+			db.insert(userAnswerTable, cvUserAnswer);
+		}
 	}
 	
 	/**
@@ -127,68 +167,32 @@ public class GuessDBDAO{
 		matchs.add("_id="+"'"+question.getId()+"'");
 		if(db.query(questionTable, null, matchs)!=null){
 			questionUpdate(question);
-//			List<Answer> answers = question.getAnswers();
-//			for(int i=0;i<answers.size();i++){
-//				List<String> answerMatchs = new ArrayList<String>();
-//				answerMatchs.add("_id="+"'"+answers.get(i).getId()+"'");
-//				if(db.query(answerTable, null, answerMatchs)!=null){
-//					
-//				}
-//			}
 		}else{
 			add(question);
 		}
+		List<String> userAnswerMatchs = new ArrayList<String>();
+		userAnswerMatchs.add("_answerId="+"'"+question.getAnswer().getId()+"'");
+		if(db.query(userAnswerTable, null, userAnswerMatchs)!=null){
+			userAnswerUpdate(question);
+		}else{
+			userAnswerAdd(question);
+		}
 	}
 	
-	
-//	/**
-//	 * 更新一条数据到lo_answer表里
-//	 * @param question 一条问题
-//	 */
-//	public void answerUpdate(Question question){
-//		List<String> updates = new ArrayList<String>();
-//		List<String> matchs = new ArrayList<String>();
-//		matchs.add("_id="+question.getId());
-//		updates.add("_id="+question.getId());
-//		if(question.getOrder()!=-1){
-//			updates.add("_order="+question.getOrder());
-//		}
-//		if(question.getText()!=null){
-//			updates.add("_text="+question.getText());
-//		}
-//		db.update(answerTable, updates, matchs);		
-//	}
-//	
-	/**
-	 * 查询逻辑模糊
-	 */
-//	/**
-//	 * 查询第几页的记录
-//	 * @param page第几页
-//	 * @param resultMax每页多少记录
-//	 */
-//	public Cursor queryPaging(int page,int maxResult){
-//		int firstResult = (page-1)*maxResult;
-//		return db.queryPaging(liveTable, firstResult, maxResult);
-//	}
 	
 	/**
 	 * 根据日期查询出当天的竞猜题目和答案选项,按问题序号，答案序号排列
 	 * @param date
 	 * @return
 	 */
-	public Cursor query(String date){
-		if(date!=null){
-			String sql = "SELECT q._id,q._order,q._score,q._date,q._text,a._id,a._order,a._text FROM "+ 
-					questionTable+" q JOIN "+ answer2questionTable+ " aq ON q._id = aq._questionId"+
-					" JOIN lo_answer a ON aq._answerId = a._id WHERE q._date="+
-					"'"+db.formatSQL(date)+"'"+" ORDER BY q._order,a._order";
+	public Cursor queryAllUserAnswer(){
+			String sql ="select lq._id,lq._date,lq._text,lq._score,lua._answerId," +
+					"lua._isRight,la._id,la._order,la._text from "+userAnswerTable+ " lua join " +
+					questionTable+" lq on lua._questionId=lq._id join "+ answer2questionTable+
+					" laq on lq._id=laq._questionId join "+answerTable+" la on laq._answerId=la._id order by lq._date desc,la._order asc" ;			
 			return db.query(sql);
-		}else{
-			return null;
-		}
 	}
-	
+
 	/**
 	 * 用于关闭数据库操作
 	 */

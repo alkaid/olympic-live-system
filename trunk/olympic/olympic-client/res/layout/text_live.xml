@@ -33,10 +33,10 @@
 	        android:layout_height="fill_parent"/>
 	    <ImageView android:id="@+id/text_live_last_page" android:layout_width="40dp" 
 		    android:layout_height="40dp" android:src="@drawable/lastpage" 
-		    android:layout_alignParentLeft="true" />
+		    android:layout_alignParentLeft="true" android:visibility="gone"/>
 		<ImageView android:id="@+id/text_live_next_page" android:layout_width="40dp" 
 		    android:layout_height="40dp" android:src="@drawable/nextpage" 
-		    android:layout_alignParentRight="true"  />
+		    android:layout_alignParentRight="true"  android:visibility="gone"/>
 	</RelativeLayout>
 
 </LinearLayout>
