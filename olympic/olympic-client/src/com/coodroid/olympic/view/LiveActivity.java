@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ActivityGroup;
 import android.content.Intent;
 import android.database.Cursor;
@@ -37,7 +36,6 @@ import android.widget.TextView;
 
 import com.coodroid.olympic.R;
 import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Global;
 import com.coodroid.olympic.common.HttpRequest;
 import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.common.SystemUtil;
@@ -49,7 +47,7 @@ import com.coodroid.olympic.model.MatchProject;
  * @author Cater
  *
  */
-public class LiveActivity extends Activity{
+public class LiveActivity extends BaseActivity{
 	
 	/**用于标记比赛日第一天*/
 	private static String MATCH_FIRST_DATE = "2012-07-26";
@@ -94,8 +92,6 @@ public class LiveActivity extends Activity{
 	
 	private LayoutInflater mInflater;
 	
-	private Global global;
-	
 	ClickEvent clickEvent;
 	
 	/**相关显示的view*/
@@ -119,7 +115,6 @@ public class LiveActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.live);
-		global=Global.getGlobal(this);
 		init();
 		refresh();
 		tagListen();
@@ -188,7 +183,7 @@ public class LiveActivity extends Activity{
 					long arg3) {
 				Intent intent = new Intent(LiveActivity.this,TextLiveActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				Global.getGlobal(LiveActivity.this).putData(Constants.bundleKey.matchOfLive, showMatchs.get(arg2));
+				global.putData(Constants.bundleKey.matchOfLive, showMatchs.get(arg2));
 				container.removeAllViews();
 				container.addView(((ActivityGroup)LiveActivity.this.getParent()).getLocalActivityManager()
 							.startActivity("TextLiveActivity", 

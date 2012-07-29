@@ -11,19 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.coodroid.olympic.R;
-import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Global;
-import com.coodroid.olympic.common.HttpRequest;
-import com.coodroid.olympic.common.LogUtil;
-import com.coodroid.olympic.common.SystemUtil;
-import com.coodroid.olympic.data.GuessDBDAO;
-import com.coodroid.olympic.model.Answer;
-import com.coodroid.olympic.model.Question;
-import com.coodroid.olympic.view.account.LoginActivity;
-import com.coodroid.olympic.view.account.RegisterActivity;
-
-import android.app.Activity;
 import android.app.ActivityGroup;
 import android.content.Intent;
 import android.database.Cursor;
@@ -40,9 +27,19 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.coodroid.olympic.R;
+import com.coodroid.olympic.common.Constants;
+import com.coodroid.olympic.common.HttpRequest;
+import com.coodroid.olympic.common.LogUtil;
+import com.coodroid.olympic.common.SystemUtil;
+import com.coodroid.olympic.data.GuessDBDAO;
+import com.coodroid.olympic.model.Answer;
+import com.coodroid.olympic.model.Question;
+import com.coodroid.olympic.view.account.LoginActivity;
+import com.coodroid.olympic.view.account.RegisterActivity;
 
 /**
  * 
@@ -50,11 +47,9 @@ import android.widget.Toast;
  *
  */
 
-public class GuessActivity extends Activity{
+public class GuessActivity extends BaseActivity{
 	public static final String ACTION="com.coodroid.olympic.view.GuessActivity";
 	private static final String PROMPT = "请选择答案，按提交按钮进行提交！！";
-	
-	private Global global;
 	
 	private GuessDBDAO db;
 //	/**用于存放需要显示的答案的map，integer表示问题id对应相应的answer*/
@@ -75,7 +70,6 @@ public class GuessActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.guess);
-		global = Global.getGlobal(this);
 		init();
 	}
 	 

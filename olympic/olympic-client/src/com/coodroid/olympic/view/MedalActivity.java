@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -27,7 +26,6 @@ import android.widget.TextView;
 
 import com.coodroid.olympic.R;
 import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Global;
 import com.coodroid.olympic.common.HttpRequest;
 import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.common.SystemUtil;
@@ -41,8 +39,7 @@ import com.coodroid.olympic.ui.PullListView.OnRefreshListener;
  * @author Cater
  *
  */
-public class MedalActivity extends Activity{
-	private Global global;
+public class MedalActivity extends BaseActivity{
 	/** 一页显示奖牌榜的最大值*/
 	private int maxPerPage = 20;
 	
@@ -63,7 +60,6 @@ public class MedalActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.medal);	
-		global=Global.getGlobal(this);
 		findview();
 		init();
 

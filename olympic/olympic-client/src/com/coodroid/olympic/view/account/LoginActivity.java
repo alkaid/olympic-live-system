@@ -14,10 +14,7 @@ import org.apache.http.client.CookieStore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,50 +27,31 @@ import android.widget.Toast;
 
 import com.coodroid.olympic.R;
 import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Global;
 import com.coodroid.olympic.common.HttpRequest;
 import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.model.User;
 import com.coodroid.olympic.ui.FormListView;
 import com.coodroid.olympic.ui.FormListView.FormListAdapter.Item;
 import com.coodroid.olympic.ui.FormListView.FormListAdapter.Validater;
-import com.coodroid.olympic.view.OlympicClientActivity;
+import com.coodroid.olympic.view.BaseActivity;
 
 /**
  * 用户注册
  * @author Alkaid
  *
  */
-public class LoginActivity extends Activity {
-	Context context;
+public class LoginActivity extends BaseActivity {
 	FormListView formListView;
-	Item uid=new Item("uid", "输入邮箱或昵称");
-	Item password=new Item("password", "输入密码");
-	/** 登录失败 */
-	private static final int status_failed=-1;
-	private static final String msg_failed="登录失败";
-	/** 已经是登录状态。登录*/
-	private static final int status_logged=0;
-	private static final String msg_logged="您已经是登录状态,要切换账号请先注销。";
-	/** 注册成功*/
-	private static final int status_success=1;
-	private static final String msg_success="登录成功";
-	/** 网络错误*/
-	private static final int status_net_error=-2;
-	private static final String msg_net_error="网络异常,请检查您的网络设置稍后重试";
+	Item uid=new Item(User.login.POST_FIELD_UID, "输入邮箱或昵称");
+	Item password=new Item(User.login.POST_FIELD_PASSWORD, "输入密码");
 	
 	private ProgressDialog pd;
 	private CookieStore cookieStore;
-	private Global global;
 	private User user;
-	private String from;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		context=this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-		global=Global.getGlobal(this);
-		from=getIntent().getStringExtra("from");
 		initForm();
 		
 		//init Button
@@ -160,7 +138,7 @@ public class LoginActivity extends Activity {
 	}
 	
 	private void parseJson(String jsonStr){
-		int status=status_net_error;
+		int status=User.status_net_error;
 		JSONObject loginJson = null;
 		if(!TextUtils.isEmpty(jsonStr)){
 			try {
@@ -172,18 +150,18 @@ public class LoginActivity extends Activity {
 			}
 		}
 		switch (status) {
-		case status_net_error:
-			Toast.makeText(context, msg_net_error, Toast.LENGTH_LONG).show();
+		case User.status_net_error:
+			Toast.makeText(context, User.login.msg_net_error, Toast.LENGTH_LONG).show();
 			break;
-		case status_logged:
-			Toast.makeText(context, msg_logged, Toast.LENGTH_LONG).show();
+		case User.status_logged:
+			Toast.makeText(context, User.login.msg_logged, Toast.LENGTH_LONG).show();
 //			Intent intent=new Intent(context, OlympicClientActivity.class);
-			Intent intent=null!=from?new Intent(from):new Intent(context, OlympicClientActivity.class);;
-			startActivity(intent);
+//			Intent intent=null!=from?new Intent(from):new Intent(context, OlympicClientActivity.class);;
+//			startActivity(intent);
 			finish();
 			break;
-		case status_failed:
-			Toast.makeText(context, msg_failed, Toast.LENGTH_LONG).show();
+		case User.status_failed:
+			Toast.makeText(context, User.login.msg_failed, Toast.LENGTH_LONG).show();
 			JSONObject errorJson;
 			try {
 				errorJson = loginJson.getJSONObject("error");
@@ -194,29 +172,27 @@ public class LoginActivity extends Activity {
 					formListView.setWarnInfo(tag, warn);
 				}
 				formListView.requestFocusOnError();
-				global.cookieStore=null;
 			//服务端内部错误时可能返回出错信息，此时不是Json格式，解析会异常
 			} catch (JSONException e) {
 				LogUtil.e(e);
-				Toast.makeText(context, msg_net_error, Toast.LENGTH_LONG).show();
+				Toast.makeText(context, User.login.msg_net_error, Toast.LENGTH_LONG).show();
+			} finally{
+				User.onChange(null, context);
 			}
 			break;
-		case status_success:
-			Toast.makeText(context, msg_success, Toast.LENGTH_LONG).show();
+		case User.status_success:
+			Toast.makeText(context, User.login.msg_success, Toast.LENGTH_LONG).show();
 			JSONObject userJson;
 			try {
 				userJson=loginJson.getJSONObject("user");
 				user.setEmail(userJson.getString("email"));
 				user.setUnick(userJson.getString("unick"));
-//				global.cookieStore=cookieStore;
 				//user对象发生改变 保存
 				User.onChange(user, context,cookieStore);
-				intent=new Intent(context, OlympicClientActivity.class);
-				startActivity(intent);
-	//			finish();
+				finish();
 			} catch (JSONException e) {
 				LogUtil.e(e);
-				Toast.makeText(context, msg_net_error, Toast.LENGTH_LONG).show();
+				Toast.makeText(context, User.login.msg_net_error, Toast.LENGTH_LONG).show();
 			}
 			break;
 		default:

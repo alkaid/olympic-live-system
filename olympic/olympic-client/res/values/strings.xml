@@ -2,6 +2,8 @@
 <resources>
 
     <string name="hello">Hello World, OlympicClientActivity!</string>
-    <string name="app_name">OlympicClient</string>
-
+    <string name="app_name">口袋奥运</string>
+	<string name="indroduce">口袋奥运直击伦敦奥运，全程为您播报奥运赛事。奥运金牌榜、奥运直播室、奥运有奖竞猜，最新最全的奥运资讯，精彩随时为您呈现。看口袋奥运，为中国队加油！</string>
+	<string name="account_welcome_unlogged">欢迎使用口袋奥运</string>
+	<string name="account_welcome_logged">%1$s,您好</string>
 </resources>

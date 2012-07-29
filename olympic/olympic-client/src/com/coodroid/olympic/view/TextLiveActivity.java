@@ -11,17 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.coodroid.olympic.R;
-import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Global;
-import com.coodroid.olympic.common.HttpRequest;
-import com.coodroid.olympic.common.LogUtil;
-import com.coodroid.olympic.common.SystemUtil;
-import com.coodroid.olympic.data.LiveDBDAO;
-import com.coodroid.olympic.model.Live;
-import com.coodroid.olympic.model.Match;
-
-import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -40,9 +29,16 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class TextLiveActivity extends Activity{
-	
-	private Global global;
+import com.coodroid.olympic.R;
+import com.coodroid.olympic.common.Constants;
+import com.coodroid.olympic.common.HttpRequest;
+import com.coodroid.olympic.common.LogUtil;
+import com.coodroid.olympic.common.SystemUtil;
+import com.coodroid.olympic.data.LiveDBDAO;
+import com.coodroid.olympic.model.Live;
+import com.coodroid.olympic.model.Match;
+
+public class TextLiveActivity extends BaseActivity{
 	
 	/**显示的每一页几行*/
 	private static final int INDEX_PER_PAGE = 10;
@@ -89,7 +85,6 @@ public class TextLiveActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.text_live);
-		global=global.getGlobal(this);	
 		init();
 	}
 	

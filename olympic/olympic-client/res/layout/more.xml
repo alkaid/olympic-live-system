@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+        >
+    <RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="50dp" android:gravity="center_vertical"
+	    android:paddingLeft="10dp" android:paddingRight="10dp"
+	    android:background="@android:color/darker_gray">
+	    <TextView android:textColor="@android:color/white"
+	            android:textSize="24sp" android:text="更多" android:layout_alignParentLeft="true"
+	            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+	    <TextView android:id="@+id/btnBack" android:textColor="@android:color/white"
+	            android:textSize="24sp" android:text="返回" android:layout_alignParentRight="true"
+	            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+	</RelativeLayout>
+
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                  android:orientation="vertical" android:gravity="center_vertical" android:layout_marginTop="10dp">
+
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                      android:orientation="horizontal" android:gravity="center_horizontal"
+                      android:layout_marginTop="10dp">
+            <Button android:id="@+id/btnNews" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_minus"
+                    android:onClick="switchMoreView" android:tag="version"/>
+            <Button android:id="@+id/btnAccount" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_star" android:layout_marginLeft="55dp"
+                    android:onClick="switchMoreView" android:tag="user"/>
+        </LinearLayout>
+        
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                      android:orientation="horizontal" android:gravity="center_horizontal"
+                      android:layout_marginTop="10dp">
+            <Button android:id="@+id/btnAbout" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_minus"
+                    android:onClick="switchMoreView" android:tag="version"/>
+            <Button android:id="@+id/btnMoreApp" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_star" android:layout_marginLeft="55dp"
+                    android:onClick="switchMoreView" android:tag="user"/>
+        </LinearLayout>
+        
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
+                      android:orientation="horizontal" android:gravity="center_horizontal"
+                      android:layout_marginTop="10dp">
+            <Button android:id="@+id/btnFeedback" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_minus"
+                    android:onClick="switchMoreView" android:tag="version"/>
+            <Button android:id="@+id/btnUpdate" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_star" android:layout_marginLeft="55dp"
+                    android:onClick="switchMoreView" android:tag="user"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+

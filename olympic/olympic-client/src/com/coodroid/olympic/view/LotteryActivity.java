@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.apache.http.cookie.Cookie;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -13,20 +11,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Global;
 
-public class LotteryActivity extends Activity {
+public class LotteryActivity extends BaseActivity {
     private WebView mWebView;
-    private Global global;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Context context=this;
     	super.onCreate(savedInstanceState);
     	mWebView=new WebView(context);
 //        setContentView(R.layout.lottery);
     	setContentView(mWebView);
-    	global=Global.getGlobal(context);
     	
 //        findViewAndButton();
     	WebSettings webSettings=mWebView.getSettings();

@@ -14,10 +14,7 @@ import org.apache.http.client.CookieStore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,21 +27,20 @@ import android.widget.Toast;
 
 import com.coodroid.olympic.R;
 import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Global;
 import com.coodroid.olympic.common.HttpRequest;
 import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.model.User;
 import com.coodroid.olympic.ui.FormListView;
 import com.coodroid.olympic.ui.FormListView.FormListAdapter.Item;
 import com.coodroid.olympic.ui.FormListView.FormListAdapter.Validater;
+import com.coodroid.olympic.view.BaseActivity;
 
 /**
  * 用户注册
  * @author Alkaid
  *
  */
-public class PwdModifyActivity extends Activity {
-	Context context;
+public class PwdModifyActivity extends BaseActivity {
 	FormListView formListView;
 	Item oldpwd=new Item("oldpwd", "请输入当前密码");
 	Item newpwd=new Item("newpwd", "请输入新密码");
@@ -63,14 +59,11 @@ public class PwdModifyActivity extends Activity {
 	
 	private ProgressDialog pd;
 	private CookieStore cookieStore;
-	private Global global;
 	private User user;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		context=this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.password);
-		global=Global.getGlobal(this);
 		
 		initForm();
 		
@@ -175,7 +168,7 @@ public class PwdModifyActivity extends Activity {
 			break;
 		case status_unlogged:
 			Toast.makeText(context, msg_net_error, Toast.LENGTH_LONG).show();
-			global.cookieStore=null;
+			User.onChange(null, context);
 			break;
 		case status_failed:
 			Toast.makeText(context, msg_failed, Toast.LENGTH_LONG).show();
@@ -193,16 +186,15 @@ public class PwdModifyActivity extends Activity {
 			} catch (JSONException e) {
 				LogUtil.e(e);
 				Toast.makeText(context, msg_net_error, Toast.LENGTH_LONG).show();
+			}finally{
+				User.onChange(null, context);
 			}
 			break;
 		case status_success:
 			Toast.makeText(context, msg_success, Toast.LENGTH_LONG).show();
-//			global.cookieStore=cookieStore;
 			//user对象发生改变 保存
 			User.onChange(user, context);
-			Intent intent=new Intent(context, AccountActivity.class);
-			startActivity(intent);
-//			finish();
+			finish();
 			break;
 		default:
 			break;
