@@ -230,9 +230,9 @@ public class RegisterActivity extends Activity {
 			break;
 		case status_success:
 			Toast.makeText(context, msg_success, Toast.LENGTH_LONG).show();
-			global.cookieStore=cookieStore;
+//			global.cookieStore=cookieStore;
 			//user对象发生改变 保存
-			User.onChange(user, context);
+			User.onChange(user, context,cookieStore);
 			intent=new Intent(context, OlympicClientActivity.class);
 			startActivity(intent);
 //			finish();

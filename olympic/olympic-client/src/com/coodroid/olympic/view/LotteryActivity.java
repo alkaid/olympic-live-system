@@ -1,61 +1,62 @@
 package com.coodroid.olympic.view;
 
-import com.coodroid.olympic.R;
-import com.coodroid.olympic.ui.Turntable;
+import java.util.List;
+
+import org.apache.http.cookie.Cookie;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
+
+import com.coodroid.olympic.common.Constants;
+import com.coodroid.olympic.common.Global;
 
 public class LotteryActivity extends Activity {
-    /** Called when the activity is first created. */
-	
-	private void findViewAndButton(){
-		
-		//自定义的View
-		final Turntable panView=(Turntable) this.findViewById(R.id.zhuanpanView);
-		
-		//开始旋转的按钮
-		Button startButton=(Button) this.findViewById(R.id.startButton);
-		startButton.setOnClickListener(new OnClickListener(){
-
-			public void onClick(View v) {
-				
-				panView.startRotate();
-				
-			}
-			
-		});
-		//停止旋转的按钮
-		Button stopButton=(Button) this.findViewById(R.id.stopButton);
-		stopButton.setOnClickListener(new Button.OnClickListener(){
-
-			public void onClick(View v) {
-				
-				panView.stopRotate();
-				
-			}
-			
-		});
-		
-	}
+    private WebView mWebView;
+    private Global global;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Context context=this;
     	super.onCreate(savedInstanceState);
-    	WebView mWebView=new WebView(context);
+    	mWebView=new WebView(context);
 //        setContentView(R.layout.lottery);
     	setContentView(mWebView);
+    	global=Global.getGlobal(context);
+    	
+//        findViewAndButton();
     	WebSettings webSettings=mWebView.getSettings();
     	webSettings.setJavaScriptEnabled(true);
-    	mWebView.loadUrl("http://www.classyuan.com/demo/lotterydraw/lotterydraw.html");
-//        findViewAndButton();
-        
+//    	webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+    	mWebView.addJavascriptInterface(new JavaScriptInterface(), "jsni");
+    }
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	CookieSyncManager.createInstance(this);
+    	CookieManager cookieManager = CookieManager.getInstance();
+    	List<Cookie> cookies=global.cookieStore.getCookies();
+    	String cookieString=null;
+    	for (int i = 0; i < cookies.size(); i++) {
+		    Cookie cookie = cookies.get(i);
+		    cookieString=cookie.getName()+"="+cookie.getValue()+"; domain="+cookie.getDomain();
+		    if (null!=cookieString) {
+//		    	cookieManager.removeSessionCookie();
+		    	cookieManager.setCookie(Constants.url.user.lottery, cookieString);
+		    }   
+		    CookieSyncManager.getInstance().sync();
+		}
+    	mWebView.loadUrl(Constants.url.user.lottery);
+    }
+    
+    private static class JavaScriptInterface{
+    	public void requestLogin(){
+    		
+    	}
     }
 }
