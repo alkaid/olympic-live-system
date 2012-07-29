@@ -203,7 +203,6 @@ public class HttpRequest {
 	 * @throws IOException
 	 */
 	public HttpResponse request() throws IOException {
-		LogUtil.i("---url---"+url);
 		HttpUriRequest req = null;
 		// url添加get参数
 		if (method.equals(METHOD_GET)) {
@@ -249,6 +248,7 @@ public class HttpRequest {
 				req.setHeader(key, header.get(key));
 			}
 		}
+		LogUtil.i("---url---"+url);
 		this.response= client.execute(req);
 		return response;
 	}
