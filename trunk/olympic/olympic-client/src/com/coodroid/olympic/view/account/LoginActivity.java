@@ -208,9 +208,9 @@ public class LoginActivity extends Activity {
 				userJson=loginJson.getJSONObject("user");
 				user.setEmail(userJson.getString("email"));
 				user.setUnick(userJson.getString("unick"));
-				global.cookieStore=cookieStore;
+//				global.cookieStore=cookieStore;
 				//user对象发生改变 保存
-				User.onChange(user, context);
+				User.onChange(user, context,cookieStore);
 				intent=new Intent(context, OlympicClientActivity.class);
 				startActivity(intent);
 	//			finish();

@@ -1,6 +1,10 @@
 package com.coodroid.olympic.model;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import org.apache.http.client.CookieStore;
+import org.apache.http.cookie.Cookie;
 
 import com.coodroid.olympic.common.AES;
 import com.coodroid.olympic.common.Constants;
@@ -66,6 +70,14 @@ public class User extends Model {
 	
 	public static void onChange(User user,Context context){
 		Global global=Global.getGlobal(context, false);
+		global.user=user;
+		if(Setting.isAutoLogin(context)){
+			user.save(context);
+		}
+	}
+	public static void onChange(User user,Context context,CookieStore cookieStore){
+		Global global=Global.getGlobal(context, false);
+		global.cookieStore=cookieStore;
 		global.user=user;
 		if(Setting.isAutoLogin(context)){
 			user.save(context);
