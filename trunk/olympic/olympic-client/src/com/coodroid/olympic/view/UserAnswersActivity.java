@@ -11,18 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.coodroid.olympic.R;
-import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Global;
-import com.coodroid.olympic.common.HttpRequest;
-import com.coodroid.olympic.common.LogUtil;
-import com.coodroid.olympic.common.SystemUtil;
-import com.coodroid.olympic.data.UserAnswerDBDAO;
-import com.coodroid.olympic.model.Answer;
-import com.coodroid.olympic.model.Question;
-import com.coodroid.olympic.view.account.LoginActivity;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -36,9 +24,18 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-public class UserAnswersActivity extends Activity{
+import com.coodroid.olympic.R;
+import com.coodroid.olympic.common.Constants;
+import com.coodroid.olympic.common.HttpRequest;
+import com.coodroid.olympic.common.LogUtil;
+import com.coodroid.olympic.common.SystemUtil;
+import com.coodroid.olympic.data.UserAnswerDBDAO;
+import com.coodroid.olympic.model.Answer;
+import com.coodroid.olympic.model.Question;
+import com.coodroid.olympic.view.account.LoginActivity;
+
+public class UserAnswersActivity extends BaseActivity{
 	
-	private Global global;
 	private UserAnswerDBDAO db;
 	/**用于存放需要显示的问题的List*/
 	private List<Question> userQuestions;
@@ -52,7 +49,6 @@ public class UserAnswersActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_answers);
-		global = Global.getGlobal(this);
 		
 		db = new UserAnswerDBDAO(this);
 		userQuestions = new ArrayList<Question>();

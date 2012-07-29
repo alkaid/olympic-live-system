@@ -4,7 +4,7 @@ public class Constants {
 	public static final String OlympicDB = "Olympic.db";
 	public static final int Version = 1;
 	public static final String PWD="www.coodroid.com";
-	private static final String server="http://192.168.235.101/ocdemo/index.php?route=olympic/";
+	private static final String server="http://192.168.235.168/ocdemo/index.php?route=olympic/";
 //	private static final String server="http://coodroid.com/ocdemo/index.php?route=olympic/";
 	public static class url{
 		private static final String api_root=server+"api/";

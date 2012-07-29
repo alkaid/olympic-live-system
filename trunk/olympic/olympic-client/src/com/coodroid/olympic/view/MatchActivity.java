@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -32,7 +31,6 @@ import android.widget.TextView;
 
 import com.coodroid.olympic.R;
 import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Global;
 import com.coodroid.olympic.common.HttpRequest;
 import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.common.SystemUtil;
@@ -46,8 +44,7 @@ import com.coodroid.olympic.ui.CategoryAdapter;
  * @author Cater
  *
  */
-public class MatchActivity extends Activity{
-	private Global global;
+public class MatchActivity extends BaseActivity{
 	/** 赛程表UI显示的赛程日 */
 	private String[] dates = {"7-26","7-27","开幕式","7-29","7-30","7-31","8-01",
 			"8-02","8-03","8-04","8-05","8-06","8-07","8-08","8-09","8-10","8-12","闭幕式"};
@@ -89,7 +86,6 @@ public class MatchActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.match);
-		global=Global.getGlobal(this);
 		init();
 	}
 	

@@ -11,25 +11,16 @@
         android:theme="@android:style/Theme.NoTitleBar">
         <activity
             android:launchMode="singleInstance"
-            android:name=".view.OlympicClientActivity" >
+            android:name=".view.WelcomeActivity" >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:launchMode="singleInstance" android:name=".view.OlympicClientActivity" />
         <activity android:name=".view.account.RegisterActivity"
-			android:launchMode="singleInstance" android:windowSoftInputMode="adjustPan">"
-           <!--  <intent-filter >
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
-        </activity>
-        <activity android:name=".view.LotteryActivity" android:launchMode="singleInstance">
-            <!-- <intent-filter >
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
-        </activity>
+			android:launchMode="singleInstance" android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".view.LotteryActivity" android:launchMode="singleInstance"/>
         <activity android:name=".view.account.LoginActivity" android:launchMode="singleInstance"/>
         <activity android:name=".view.account.AccountActivity" android:launchMode="singleInstance"/>
         <activity android:name=".view.account.PwdModifyActivity" android:launchMode="singleInstance"/>

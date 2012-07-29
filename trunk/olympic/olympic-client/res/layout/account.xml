@@ -14,12 +14,74 @@
             android:textSize="24sp" android:text="返回" android:layout_alignParentRight="true"
             android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 </RelativeLayout>
-<LinearLayout 
+<RelativeLayout android:id="@+id/layWelcome"
+        android:layout_width="fill_parent" android:layout_height="wrap_content">
+	<TextView android:id="@+id/tvWelcome"
+	    android:textSize="20sp" android:text="欢迎使用口袋奥运" 
+	    android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+</RelativeLayout>
+<LinearLayout android:id="@+id/layUnlogged"
     android:layout_width="fill_parent" android:layout_height="fill_parent"
     android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
     android:layout_marginTop="40dp" android:orientation="vertical">
-	<Button android:id="@+id/btnAutoLogin"
-	    android:text="修改密码" android:textSize="18sp"
-	    android:layout_width="fill_parent" android:layout_height="wrap_content"/>
-</LinearLayout>>
+    <TextView android:id="@+id/tvIntroduce" android:textSize="14sp"
+        android:text="@string/indroduce"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"/>
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:gravity="center">
+		<Button android:id="@+id/btnLogin"
+		    android:text="登录" android:textSize="18sp"
+		    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+		<Button android:id="@+id/btnRegister"
+		    android:text="注册" android:textSize="18sp"
+		    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>
+<LinearLayout android:id="@+id/layLogged"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+    android:layout_marginTop="40dp" android:orientation="vertical">
+    <RelativeLayout android:id="@+id/layPwd"
+        android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <ImageView android:id="@+id/imgPwd" android:src="@android:drawable/ic_partial_secure"
+            android:layout_width="15dp" android:layout_height="15dp"/>
+        <TextView android:text="修改密码" android:id="@+id/tvPwd"
+            android:textSize="16sp" android:textColor="@android:color/black"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/imgPwd"/>
+        <TextView android:text="设置您的账号密码" 
+            android:textSize="12sp" android:textColor="@android:color/darker_gray"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_below="@id/tvPwd" android:layout_alignLeft="@id/tvPwd"/>
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/layAutoLogin"
+        android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <ImageView android:id="@+id/imgAutoLogin" android:src="@android:drawable/ic_partial_secure"
+            android:layout_width="15dp" android:layout_height="15dp"/>
+        <TextView android:text="自动登录" android:id="@+id/tvAutoLogin"
+            android:textSize="16sp" android:textColor="@android:color/black"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/imgAutoLogin"/>
+        <TextView android:text="设置启动应用时是否自动登录" 
+            android:textSize="12sp" android:textColor="@android:color/darker_gray"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_below="@id/tvAutoLogin" android:layout_alignLeft="@id/tvAutoLogin"/>
+        <CheckBox android:id="@+id/chkAutoLogin"
+            android:layout_width="80dp" android:layout_height="wrap_content"
+            android:button="@drawable/sel_toggle"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/layLogout"
+        android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <ImageView android:id="@+id/imgLogout" android:src="@android:drawable/ic_partial_secure"
+            android:layout_width="15dp" android:layout_height="15dp"/>
+        <TextView android:text="退出登录" android:id="@+id/tvLogout"
+            android:textSize="16sp" android:textColor="@android:color/black"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/imgLogout"/>
+        <TextView android:text="退出您已经登录的账户" 
+            android:textSize="12sp" android:textColor="@android:color/darker_gray"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_below="@id/tvLogout" android:layout_alignLeft="@id/tvLogout"/>
+    </RelativeLayout>
+</LinearLayout>
 </LinearLayout>

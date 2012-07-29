@@ -15,9 +15,7 @@ import org.apache.http.client.CookieStore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,22 +29,20 @@ import android.widget.Toast;
 
 import com.coodroid.olympic.R;
 import com.coodroid.olympic.common.Constants;
-import com.coodroid.olympic.common.Global;
 import com.coodroid.olympic.common.HttpRequest;
 import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.model.User;
 import com.coodroid.olympic.ui.FormListView;
 import com.coodroid.olympic.ui.FormListView.FormListAdapter.Item;
 import com.coodroid.olympic.ui.FormListView.FormListAdapter.Validater;
-import com.coodroid.olympic.view.OlympicClientActivity;
+import com.coodroid.olympic.view.BaseActivity;
 
 /**
  * 用户注册
  * @author Alkaid
  *
  */
-public class RegisterActivity extends Activity {
-	Context context;
+public class RegisterActivity extends BaseActivity {
 	FormListView formListView;
 	Item email=new Item("email", "请输入邮箱");
 	Item unick=new Item("unick", "请输入昵称(1-32位字符)");
@@ -66,14 +62,11 @@ public class RegisterActivity extends Activity {
 	
 	private ProgressDialog pd;
 	private CookieStore cookieStore;
-	private Global global;
 	private User user;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		context=this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.register);
-		global=Global.getGlobal(this);
 		
 		initForm();
 		
@@ -205,9 +198,9 @@ public class RegisterActivity extends Activity {
 			break;
 		case status_logged:
 			Toast.makeText(context, msg_logged, Toast.LENGTH_LONG).show();
-			Intent intent=new Intent(context, OlympicClientActivity.class);
-			startActivity(intent);
-//			finish();
+//			Intent intent=new Intent(context, OlympicClientActivity.class);
+//			startActivity(intent);
+			finish();
 			break;
 		case status_failed:
 			Toast.makeText(context, msg_failed, Toast.LENGTH_LONG).show();
@@ -221,21 +214,19 @@ public class RegisterActivity extends Activity {
 					formListView.setWarnInfo(tag, warn);
 				}
 				formListView.requestFocusOnError();
-				global.cookieStore=null;
 			//服务端内部错误时可能返回出错信息，此时不是Json格式，解析会异常
 			} catch (JSONException e) {
 				LogUtil.e(e);
 				Toast.makeText(context, msg_net_error, Toast.LENGTH_LONG).show();
+			}finally{
+				User.onChange(null, context);
 			}
 			break;
 		case status_success:
 			Toast.makeText(context, msg_success, Toast.LENGTH_LONG).show();
-//			global.cookieStore=cookieStore;
 			//user对象发生改变 保存
 			User.onChange(user, context,cookieStore);
-			intent=new Intent(context, OlympicClientActivity.class);
-			startActivity(intent);
-//			finish();
+			finish();
 			break;
 		default:
 			break;
