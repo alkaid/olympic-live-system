@@ -74,7 +74,7 @@
     <RelativeLayout android:layout_height="fill_parent" android:layout_width="fill_parent"  android:layout_below="@id/medalTableTitle">
 	    <com.coodroid.olympic.ui.PullListView android:id="@+id/medalTable"
 	       android:layout_width="fill_parent" android:layout_height="fill_parent"
-	       android:scrollbars="vertical"> 
+	       android:scrollbars="vertical" android:cacheColorHint="#00000000"> 
 	    </com.coodroid.olympic.ui.PullListView> 
 	    <ProgressBar
 			  android:layout_width="wrap_content"

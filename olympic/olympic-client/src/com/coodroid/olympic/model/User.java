@@ -52,6 +52,7 @@ public class User extends Model {
 	private String email;
 	private String unick;
 	private String password;
+	private int rank;
 	private int questionScore;
 	private int state;
 	
@@ -63,8 +64,8 @@ public class User extends Model {
 		this.password=password;
 	}
 	
-	public User(int id){
-		this.id = id;
+	public User(String unick){
+		this.unick = unick;
 	}
 	
 	public void save(Context context){
@@ -261,6 +262,14 @@ public class User extends Model {
 
 	public void setState(int state) {
 		this.state = state;
+	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
 	}
 	
 	

@@ -2,7 +2,10 @@ package com.coodroid.olympic.view;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,16 +132,18 @@ public class MatchActivity extends BaseActivity{
 	 * 设置比赛时间表
 	 */
 	private void setMatchDateList(){
-		MatchDataAdapter adapter = new MatchDataAdapter();
+		final MatchDataAdapter adapter = new MatchDataAdapter();
 		matchDateList.setAdapter(adapter);
 		matchDateList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				
 				position = arg2;
+				adapter.setSelectItem(arg2);
 				updateMatchContent();
+				adapter.notifyDataSetInvalidated();
+//				arg1.setBackgroundResource(R.color.press);
 			}
 			
 		});
@@ -329,7 +334,7 @@ public class MatchActivity extends BaseActivity{
 	
 	private void updateMatchContent(){
 		refreshBtn.setVisibility(View.GONE);
-		matchList.setVisibility(View.GONE);
+//		matchList.setVisibility(View.GONE);
 		matchProgressBar.setVisibility(View.VISIBLE);
 		matchContentProgressBar.setVisibility(View.VISIBLE);
 		new MatchTask(orderShow).execute(null);
@@ -355,7 +360,7 @@ public class MatchActivity extends BaseActivity{
 			setMatchContent(groupByWhat);
 			matchProgressBar.setVisibility(View.GONE);
 			matchContentProgressBar.setVisibility(View.GONE);
-			matchList.setVisibility(View.VISIBLE);
+//			matchList.setVisibility(View.VISIBLE);
 			refreshBtn.setVisibility(View.VISIBLE);
 		}
 		
@@ -402,10 +407,10 @@ public class MatchActivity extends BaseActivity{
 				holder = (ViewHolder) convertView.getTag();				
 			}
 			Match m = matchs.get(position);
-			holder.bjTime.setText(m.getBjTime());
+			holder.bjTime.setText(m.getBjTime().substring(0, m.getBjTime().length()-3));
 			holder.name.setText(m.getName());
 
-			LogUtil.v("MAOXIA",position+""+"    "+m.getName()+"  "+m.getBjTime());
+//			LogUtil.v("MAOXIA",position+""+"    "+m.getName()+"  "+m.getBjTime());
 			
 			convertView.setBackgroundColor(Color.WHITE);
 //	         int[] colors = { Color.WHITE, Color.rgb(219, 238, 244) };//RGB颜色 
@@ -416,13 +421,25 @@ public class MatchActivity extends BaseActivity{
 		
 	}
 	
+//	private String formatDate(String datetime){
+//		try {
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//			Date date = sdf.parse(datetime);
+//			sdf.
+//		} catch (ParseException e) {
+//			LogUtil.e(e);
+//		}
+//	}
+	
 	/**
 	 * 
 	 * @author 比赛时间列表的adapter
 	 *
 	 */
-	private class MatchDataAdapter extends BaseAdapter{
+	public class MatchDataAdapter extends BaseAdapter{
 
+		private int selectItem = -1;	
+		
 		@Override
 		public int getCount() {
 			return dates.length;
@@ -440,7 +457,7 @@ public class MatchActivity extends BaseActivity{
 
 		@Override
 		public View getView(int arg0, View arg1, ViewGroup arg2) {
-			LogUtil.v("MAOXIA",arg0+"");
+//			LogUtil.v("MAOXIA",arg0+"");
 			View view = null;
 			if(arg1!=null){
 				view = arg1;
@@ -451,7 +468,16 @@ public class MatchActivity extends BaseActivity{
 				dateTxt.setText(dates[arg0]);
 				view = date;
 			}
+			if(arg0==selectItem){
+				view.setBackgroundColor(Color.BLUE);
+			}else{
+				view.setBackgroundColor(Color.TRANSPARENT);
+			}
 			return view;
+		}
+		
+		public void setSelectItem(int selectItem){
+			this.selectItem = selectItem;
 		}
 		
 	}

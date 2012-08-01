@@ -11,42 +11,43 @@
         <ImageView android:id="@+id/refresh_btn" android:src="@drawable/refresh" android:layout_marginLeft="6.4dp"
             android:layout_width="wrap_content" android:layout_height="wrap_content" 
             android:layout_alignParentLeft="true"   android:layout_centerVertical="true"/>
-        <ProgressBar
-			  android:layout_width="wrap_content"
+        <ProgressBar android:layout_width="wrap_content"
 			  android:layout_height="wrap_content"
 			  style="?android:attr/progressBarStyleSmall"
 			  android:id="@+id/liveProcessBar"
 			  android:layout_centerVertical="true"
 			  android:layout_marginLeft="6.4dp"
 			  android:layout_alignParentLeft="true"			  
-			  android:visibility="gone"
-  		/>
+			  android:visibility="gone"/>
 		<LinearLayout android:id="@+id/tagSwitch" android:layout_width="wrap_content" 
 		    android:layout_height="wrap_content" android:layout_centerInParent="true" android:orientation="horizontal">
 		    <Button android:id="@+id/tagOfVideo" android:layout_width="wrap_content" android:layout_height="wrap_content"
-			    android:text="视频" android:background="@color/live_noselect_color" android:textSize="28sp"/>		    
+			    android:text="视频" android:background="@color/live_noselect_color" android:textSize="28sp" />		    
 			<Button android:id="@+id/tagOfText" android:layout_width="wrap_content" android:layout_height="wrap_content"
-			    android:text="文字" android:background="@color/live_select_color" android:textSize="28sp"/>		    
+			    android:text="文字" android:background="@color/live_select_color" android:textSize="28sp" />		    
 		</LinearLayout>
 		<Button android:id="@+id/live_sort" android:layout_width="wrap_content" android:layout_height="wrap_content"
 	            android:layout_alignParentRight="true" android:layout_centerVertical="true"
 	            android:src="@drawable/select" android:text="直播分类"/>
 	</RelativeLayout>
-	<LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"  android:orientation="vertical">	
-				<TextView android:id="@+id/live_date" android:layout_width="fill_parent" 
-				    android:layout_height="wrap_content"  android:textSize="22sp"/>
-				
-				<TextView android:id="@+id/live_sort_title" android:layout_width="fill_parent" 
-				    android:layout_height="wrap_content"  android:textSize="22sp" android:background="@color/live_select_color"/>
-				<ListView android:id="@+id/living_list" android:layout_width="fill_parent" 
-				    android:layout_height="wrap_content" >
-			    </ListView>
-				
+	<LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent"  android:orientation="vertical">
+    	<RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content" >	
+			<TextView android:id="@+id/live_date" android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"  android:textSize="22sp" android:layout_alignParentRight="true"/>	
+	    </RelativeLayout>		
+		<TextView android:id="@+id/live_sort_title" android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"  android:textSize="22sp"/>
+		<LinearLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical">
+			<ListView android:id="@+id/living_list" android:layout_width="fill_parent" 
+			    android:layout_height="fill_parent" android:cacheColorHint="#00000000">
+		    </ListView>
+	    </LinearLayout>					
 	</LinearLayout>
-	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"  android:orientation="horizontal">
-			        <Button android:id="@+id/live_last_date" android:layout_width="wrap_content"
-			            android:layout_height="wrap_content" android:text="上一日"/>
-			        <Button android:id="@+id/live_next_date" android:layout_width="wrap_content"
-			            android:layout_height="wrap_content" android:text="下一日" />
+	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"  
+	   				 android:layout_marginTop="10dp" android:orientation="horizontal" >
+	        <Button android:id="@+id/live_last_date" android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" android:text="上一日" android:layout_marginLeft="10dp" android:visibility="gone"/>
+	        <Button android:id="@+id/live_next_date" android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" android:text="下一日" android:layout_marginLeft="10dp" android:visibility="gone"/>
 	</LinearLayout>
  </LinearLayout>

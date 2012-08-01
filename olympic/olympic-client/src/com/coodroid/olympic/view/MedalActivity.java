@@ -140,7 +140,7 @@ public class MedalActivity extends BaseActivity{
 			medalList.onRefreshComplete();
 			refreshBtn.setVisibility(View.VISIBLE);
 			medalTitleProgressBar.setVisibility(View.GONE);
-			medalList.setVisibility(View.VISIBLE);
+//			medalList.setVisibility(View.VISIBLE);
 			medalContentProgressBar.setVisibility(View.GONE);
 		}
 		
@@ -293,7 +293,7 @@ public class MedalActivity extends BaseActivity{
 	private void updateMedalContent(int i){
 		refreshBtn.setVisibility(View.GONE);
 		medalTitleProgressBar.setVisibility(View.VISIBLE);
-		medalList.setVisibility(View.GONE);
+//		medalList.setVisibility(View.GONE);
 		medalContentProgressBar.setVisibility(View.VISIBLE);
 		new RefreshAsyncTask(i).execute(null);
 	}

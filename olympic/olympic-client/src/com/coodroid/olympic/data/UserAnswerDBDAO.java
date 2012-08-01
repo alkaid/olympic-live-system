@@ -128,9 +128,9 @@ public class UserAnswerDBDAO {
 		Answer userAnswer = question.getAnswer();
 		List<String> userAnswerUpdates = new ArrayList<String>();
 		List<String> userAnswerMatchs = new ArrayList<String>();
-		userAnswerMatchs.add("_answerId="+userAnswer.getId());
+		userAnswerMatchs.add("_questionId="+"'"+question.getId()+"'");
 		List<String> userAnswerQueryMatchs = new ArrayList<String>();
-		userAnswerQueryMatchs.add("_answerId="+"'"+userAnswer.getId()+"'");
+		userAnswerQueryMatchs.add("_questionId="+"'"+question.getId()+"'");
 		if(db.query(userAnswerTable, null, userAnswerQueryMatchs)!=null){
 			if(userAnswer.getId()!=-1){
 				userAnswerUpdates.add("_answerId="+userAnswer.getId());
@@ -149,7 +149,7 @@ public class UserAnswerDBDAO {
 		//插入用户答题记录
 		ContentValues cvUserAnswer = new ContentValues();
 		List<String> userAnswerMatchs = new ArrayList<String>();
-		userAnswerMatchs.add("_answerId="+"'"+question.getAnswer().getId()+"'");
+		userAnswerMatchs.add("_questionId="+"'"+question.getId()+"'");
 		if(db.query(userAnswerTable, null, userAnswerMatchs)==null){
 			cvUserAnswer.put("_answerId", question.getAnswer().getId());
 			cvUserAnswer.put("_questionId", question.getAnswer().getQuestionId());
@@ -171,7 +171,7 @@ public class UserAnswerDBDAO {
 			add(question);
 		}
 		List<String> userAnswerMatchs = new ArrayList<String>();
-		userAnswerMatchs.add("_answerId="+"'"+question.getAnswer().getId()+"'");
+		userAnswerMatchs.add("_questionId="+"'"+question.getId()+"'");
 		if(db.query(userAnswerTable, null, userAnswerMatchs)!=null){
 			userAnswerUpdate(question);
 		}else{
@@ -187,10 +187,14 @@ public class UserAnswerDBDAO {
 	 */
 	public Cursor queryAllUserAnswer(){
 			String sql ="select lq._id,lq._date,lq._text,lq._score,lua._answerId," +
-					"lua._isRight,la._id,la._order,la._text from "+userAnswerTable+ " lua join " +
+					"lua._isRight,la._id,la._order,la._text,lq._answerId from "+userAnswerTable+ " lua join " +
 					questionTable+" lq on lua._questionId=lq._id join "+ answer2questionTable+
-					" laq on lq._id=laq._questionId join "+answerTable+" la on laq._answerId=la._id order by lq._date desc,la._order asc" ;			
+					" laq on lq._id=laq._questionId join "+answerTable+" la on laq._answerId=la._id order by lq._date desc,lq._id asc,la._order asc" ;			
 			return db.query(sql);
+	}
+	
+	public void deleteTable(){
+		String sql = "delete * from "+userAnswerTable;
 	}
 
 	/**
