@@ -179,7 +179,7 @@ public class GuessDBDAO{
 	 */
 	public Cursor query(String date){
 		if(date!=null){
-			String sql = "SELECT q._id,q._order,q._score,q._date,q._text,a._id,a._order,a._text FROM "+ 
+			String sql = "SELECT q._id,q._order,q._score,q._date,q._text,a._id,a._order,a._text,q._answerId FROM "+ 
 					questionTable+" q JOIN "+ answer2questionTable+ " aq ON q._id = aq._questionId"+
 					" JOIN lo_answer a ON aq._answerId = a._id WHERE q._date="+
 					"'"+db.formatSQL(date)+"'"+" ORDER BY q._order,a._order";

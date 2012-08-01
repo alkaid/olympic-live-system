@@ -13,7 +13,7 @@ import com.coodroid.olympic.model.Medal;
 import com.coodroid.olympic.model.User;
 
 public class UserDBDAO {
-	public static final String userTable="lo_user";
+	public static final String rankTable="lo_user_rank";
 	private DBHelper db = null;
 	
 	public UserDBDAO(Context context){
@@ -22,82 +22,60 @@ public class UserDBDAO {
 	}
 	
 	/**
-	 * 插入lo_user数据的方法
-	 * @param medal奖牌榜一行的数据
+	 * 插入lo_user_rank数据的方法
+	 * @param user用户一行的数据
 	 */
 	public void add(User user){
 		ContentValues cv = new ContentValues();
-		cv.put("_id", user.getId());
 		cv.put("_unick", user.getUnick());
+		cv.put("_rank", user.getRank());
 		cv.put("_questionScore", user.getQuestionScore());
-		db.insert(userTable, cv);
+		db.insert(rankTable, cv);
 	}
 	
 	/**
-	 * 更新一条数据到lo_medal表里
+	 * 更新一条数据到lo_user_rank表里
 	 * @param medal Medal实体类 表示更新的数据
 	 */
-	public void update(Medal medal){
+	public void update(User user){
 		List<String> updates = new ArrayList<String>();
 		List<String> matchs = new ArrayList<String>();
-		matchs.add("_id="+"'"+db.formatSQL(medal.getId())+"'");
-		updates.add("_id="+"'"+db.formatSQL(medal.getId())+"'");
-		if(medal.getRanking()!=-1){
-			updates.add("_ranking="+medal.getRanking());
+		matchs.add("_unick="+"'"+db.formatSQL(user.getUnick())+"'");
+		updates.add("_unick="+"'"+db.formatSQL(user.getUnick())+"'");
+		if(user.getRank()!=-1){
+			updates.add("_rank="+user.getRank());
 		}
-		if(medal.getPicture()!=null){
-			updates.add("_picture="+"'"+db.formatSQL(medal.getPicture())+"'");
+		if(user.getQuestionScore()!=-1){
+			updates.add("_questionScore="+user.getQuestionScore());
 		}
-		if(medal.getSimpleName()!=null){
-			updates.add("_simpleName="+"'"+db.formatSQL(medal.getSimpleName())+"'");
-		}
-		if(medal.getGold()!=-1){
-			updates.add("_gold="+medal.getGold());
-		}
-		if(medal.getSilver()!=-1){
-			updates.add("_silver="+medal.getSilver());
-		}
-		if(medal.getCopper()!=-1){
-			updates.add("_copper="+medal.getSilver());
-		}
-		if(medal.getTotal()!=-1){
-			updates.add("_total="+medal.getTotal());
-		}
-//		db.update(medalTable,updates,matchs);			
+		db.update(rankTable,updates,matchs);			
 	}
 	
 	/**
 	 * 数据表里有记录采用更新，无记录采用插入操作
-	 * @param medal
+	 * @param user
 	 */
-	public void addOrUpdate(Medal medal){
-//		List<String> matchs = new ArrayList<String>();
-//		matchs.add("_id="+"'"+db.formatSQL(medal.getId())+"'");
-//		if(db.query(medalTable, null, matchs)!=null){
-//			update(medal);
-//		}else{
-//			add(medal);
-//		}
-//		
+	public void addOrUpdate(User user){
+		List<String> matchs = new ArrayList<String>();
+		matchs.add("_unick="+"'"+db.formatSQL(user.getUnick())+"'");
+		if(db.query(rankTable, null, matchs)!=null){
+			update(user);
+		}else{
+			add(user);
+		}
+		
 	}
 	
 	/**
-	 * 查询第几页的记录,其中查询的列包括ranking,picture,simpleName,gold,silver,copper,total
+	 * 查询第几页的记录,
 	 * @param page查询第几页
 	 * @param maxResult每页多少记录
 	 */
-//	public Cursor queryPaging(int page,int maxResult){
-//		List<String> columns = new ArrayList<String>();
-//		columns.add("_ranking");
-//		columns.add("_picture");
-//		columns.add("_simpleName");
-//		columns.add("_gold");
-//		columns.add("_silver");
-//		columns.add("_copper");
-//		columns.add("_total");
-//		int firstResult = (page-1)*maxResult;
-//		return db.queryPaging(medalTable, null,firstResult, maxResult);
-//	}
+	public Cursor queryPaging(int page,int maxResult){
+		int firstResult = (page-1)*maxResult;
+		String sql = "SELECT * FROM(SELECT * FROM "+rankTable+" order by _rank) LIMIT "+maxResult+" OFFSET "+firstResult;
+		return  db.query(sql);
+	}
 	
 //	/**
 //	 * 用于查询所有的

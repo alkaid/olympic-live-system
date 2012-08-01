@@ -25,6 +25,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -57,7 +59,8 @@ public class GuessActivity extends BaseActivity{
 	/**用于存放需要显示的问题的List*/
 	private List<Question> questions;
 	private LayoutInflater mInflater;
-	
+	private ClickEvent clickEvent;
+	private QuizAdapter adapter;
 	
 	/**初始化view*/
 	private ListView guessList;
@@ -65,6 +68,7 @@ public class GuessActivity extends BaseActivity{
 	private TextView guessHistory;
 	private LinearLayout container;
 	private ImageView refresh;
+	private ProgressBar refreshBar;
 	
 	 @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,37 +87,36 @@ public class GuessActivity extends BaseActivity{
 		guessHistory = (TextView) findViewById(R.id.guess_history);
 		refresh = (ImageView) findViewById(R.id.refresh_btn);
 		container = (LinearLayout)((ActivityGroup)getParent()).getWindow().findViewById(R.id.containerBody);
+		refreshBar = (ProgressBar) findViewById(R.id.guessProcessBar);
 		
 		db = new GuessDBDAO(this);
 //		answers = new HashMap<Integer, List<Answer>>();
 		questions = new ArrayList<Question>();
 		mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-		loadData();
-		QuizAdapter adapter = new QuizAdapter();
-		guessDate.setText("最后更新时间: "+SystemUtil.getCurrentDateTime());
-		guessList.setAdapter(adapter);
+		adapter = new QuizAdapter();
+		refreshOperator();
 		//点击跳转到
-		guessHistory.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(GuessActivity.this,UserAnswersActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				container.removeAllViews();
-				container.addView(((ActivityGroup)GuessActivity.this.getParent()).getLocalActivityManager()
-							.startActivity("UserAnswerActivity", 
-								intent)
-								.getDecorView());
-			}
-		});
+		clickEvent = new ClickEvent();
+		guessHistory.setOnClickListener(clickEvent);
 		
 		refresh.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(GuessActivity.this,RegisterActivity.class);
-				GuessActivity.this.startActivity(intent);
+				refreshOperator();
 			}
 		});
 	}
+	
+	/**]
+	 * 做刷新操作
+	 */
+	private void refreshOperator(){
+		refresh.setVisibility(View.GONE);
+		refreshBar.setVisibility(View.VISIBLE);
+		new GuessAsyncTask().execute(null);
+	}
+	
+	
 	 
 	private void loadData(){
 		List<Question> qs = null;
@@ -125,13 +128,15 @@ public class GuessActivity extends BaseActivity{
 				}
 			}
 		}
+		questions.clear();
 		Cursor c = db.query(SystemUtil.getCurrentDate());
 		if(c.moveToFirst()){
 			int lastQuestionId = -1;
-			do{				
+			Question q = null;
+			do{			
 				if(c.getInt(0)!=lastQuestionId){
 					lastQuestionId = c.getInt(0);
-					Question q = new Question(c.getInt(0));
+					q = new Question(c.getInt(0));
 					q.setOrder(c.getInt(1));
 					q.setScore(c.getInt(2));
 					q.setDate(c.getString(3));
@@ -145,6 +150,9 @@ public class GuessActivity extends BaseActivity{
 				a.setQuestionId(lastQuestionId);
 				a.setText(c.getString(7));
 				questions.get(questions.size()-1).getAnswers().add(a);
+				if(c.getInt(5)==c.getInt(8)){
+					q.setAnswer(a);
+				}
 //				answers.get(lastQuestionId).add(a);
 			}while(c.moveToNext());
 		}		
@@ -260,6 +268,7 @@ public class GuessActivity extends BaseActivity{
 			holder.questionScore.setText("(奖"+q.getScore()+"分)");
 //			List<Answer> as = answers.get(q.getId());
 			List<Answer> as = q.getAnswers();
+			holder.answerGroup.removeAllViews();
 			for(int i=0;i<as.size();i++){
 				Answer a = as.get(i);
 				RadioButton rb = new RadioButton(GuessActivity.this);
@@ -271,7 +280,8 @@ public class GuessActivity extends BaseActivity{
 		
 			}
 			if(q.getAnswer()!=null){
-				holder.answerPrompt.setText("你已提交答案，你提交的答案是"+q.getAnswer().getText());
+				holder.answerPrompt.setText("可更改答案，当前答案是『"+q.getAnswer().getText()+"』");
+				holder.submitBtn.setText("更改");
 			}else{
 				holder.answerPrompt.setText(PROMPT);
 			}
@@ -325,7 +335,7 @@ public class GuessActivity extends BaseActivity{
 					statusData=request
 //							.setHeader(debugHeader)
 							.setConnectionTimeout(3000)
-							.setRetryCount(0)
+							.setRetryCount(1)
 							.setCookieStore(global.cookieStore)
 							.setUrl(Constants.url.user.guessSubmit)
 							.setParams(httpParams)
@@ -333,9 +343,10 @@ public class GuessActivity extends BaseActivity{
 							.setCharset("utf-8")
 							.getContent();
 				} catch (MalformedURLException e) {
+					Toast.makeText(GuessActivity.this, "网络不给力,请稍后再试!!", Toast.LENGTH_SHORT).show();
 					LogUtil.e(e);
-					LogUtil.e("提交答题遇到网络问题");
 				} catch (IOException e) {
+					Toast.makeText(GuessActivity.this, "网络不给力,请稍后再试!!", Toast.LENGTH_SHORT).show();
 					LogUtil.e(e);
 					LogUtil.e("提交答题遇到网络问题");
 				}
@@ -367,17 +378,33 @@ public class GuessActivity extends BaseActivity{
 				return;
 			}
 			if(result.equals("2")){
-				Toast.makeText(GuessActivity.this, "答题成功提交", Toast.LENGTH_SHORT);
-				prompt.setText("你已提交答案，你提交的答案是"+answer.getText());
+				Toast.makeText(GuessActivity.this, "答题成功提交", Toast.LENGTH_SHORT).show();
+				prompt.setText("你已提交答案，你提交的答案是『"+answer.getText()+"』");
 			}else if(result.equals("-1")){
-LogUtil.v("请登录");
 				Intent intent = new Intent(GuessActivity.this,LoginActivity.class);
 				intent.putExtra("from", GuessActivity.ACTION);
 				GuessActivity.this.startActivity(intent);
 			}else{
-				Toast.makeText(GuessActivity.this, "提交失败，请稍后再重新提交", Toast.LENGTH_SHORT);
+				Toast.makeText(GuessActivity.this, "提交失败，请稍后再重新提交", Toast.LENGTH_SHORT).show();
 			}
 		}
+	}
+	
+	private class GuessAsyncTask extends AsyncTask<Void, Void, Void>{
+		@Override
+		protected Void doInBackground(Void... params) {
+			loadData();
+			return null;
+		}
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			guessList.setAdapter(adapter);
+			guessDate.setText("最后更新时间: "+SystemUtil.getCurrentDateTime());
+			refresh.setVisibility(View.VISIBLE);
+			refreshBar.setVisibility(View.GONE);
+		}
+		
 	}
 	
 	
@@ -388,5 +415,68 @@ LogUtil.v("请登录");
 		TextView answerPrompt;
 		RadioGroup answerGroup;
 		Button submitBtn;
+	}
+	
+	/**
+	 * 用于监听生成Title PopupWindow
+	 * @author Cater
+	 *
+	 */
+	private class ClickEvent implements OnClickListener{
+		private PopupWindow popupWindow;
+		private int screenWidth;
+		private int dialogWidth;
+		
+		@Override
+		public void onClick(View v) {
+			if(popupWindow!=null&&popupWindow.isShowing()){
+				popupWindow.dismiss();
+			}else{
+				getPopuWindow().showAsDropDown(v,screenWidth-dialogWidth,0);
+			}
+		}
+		
+		private PopupWindow getPopuWindow(){
+			
+			View popupWindow_view = getLayoutInflater().inflate(R.layout.guess_fuction_list, null,false);
+					popupWindow = new PopupWindow(popupWindow_view, 120, 150, false);	
+					
+			TextView userHistorySelectTxt = (TextView) popupWindow_view.findViewById(R.id.user_history_select);
+			TextView rankSelectTxt = (TextView) popupWindow_view.findViewById(R.id.rank_select);
+				userHistorySelectTxt.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(GuessActivity.this,UserAnswersActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						container.removeAllViews();
+						container.addView(((ActivityGroup)GuessActivity.this.getParent()).getLocalActivityManager()
+									.startActivity("UserAnswerActivity", 
+										intent)
+										.getDecorView());
+						popupWindow.dismiss();
+					}
+				});
+
+				rankSelectTxt.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(GuessActivity.this,UserRankActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						container.removeAllViews();
+						container.addView(((ActivityGroup)GuessActivity.this.getParent()).getLocalActivityManager()
+									.startActivity("UserRankActivity", 
+										intent)
+										.getDecorView());
+						popupWindow.dismiss();
+					}
+				});
+
+			screenWidth = GuessActivity.this.getWindowManager().getDefaultDisplay().getWidth();
+			dialogWidth = popupWindow.getWidth();
+			
+			
+			return popupWindow;
+		}
+		
 	}
 }

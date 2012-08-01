@@ -14,6 +14,7 @@ public class Constants {
 			public static final String match=api_root+"match";
 			public static final String textlive=api_root+"textlive";
 			public static final String question=api_root+"question";
+			public static final String points=api_root+"points";
 		}
 		public static class user{
 			public static final String register=user_root+"register";
@@ -22,6 +23,7 @@ public class Constants {
 			public static final String lottery=user_root+"lottery";
 			public static final String history=user_root+"guess/history";
 			public static final String guessSubmit=user_root+"guess/answer";
+			public static final String userPoint=user_root+"guess/points";
 		}
 	}
 	public static class bundleKey{

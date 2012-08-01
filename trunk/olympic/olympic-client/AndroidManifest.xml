@@ -35,6 +35,8 @@
         <activity android:name=".view.MoreActivity" android:launchMode="singleInstance"/>
         <activity android:name=".view.TextLiveActivity" android:launchMode="singleInstance"/>
         <activity android:name=".view.UserAnswersActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".view.UserRankActivity" android:launchMode="singleInstance"/>
+         <activity android:name=".view.NewsActivity" android:launchMode="singleInstance"/>
     </application>
 	<uses-permission android:name="android.permission.INTERNET" />    
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

@@ -71,6 +71,13 @@ CREATE TABLE lo_user_answers
   _answerId int(10) NOT NULL CONSTRAINT fk_answer_id REFERENCES lo_answer(_id) ON DELETE CASCADE,
   _isRight int(10)    
 ) ;
+DROP TABLE IF EXISTS "lo_user_rank" ;
+CREATE TABLE lo_user_rank
+(	
+	_unick varchar(10) NOT NULL PRIMARY KEY ,
+	_rank int(10) NOT NULL,
+	_questionScore int(10) NOT NULL	 
+);
 INSERT INTO lo_project VALUES ('1', '蹦床');
 INSERT INTO lo_project VALUES ('2', '闭幕式');
 INSERT INTO lo_project VALUES ('3', '帆船');

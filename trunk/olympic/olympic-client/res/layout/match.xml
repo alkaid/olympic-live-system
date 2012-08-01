@@ -6,10 +6,6 @@
     <RelativeLayout android:id="@+id/match_title" android:layout_height="wrap_content" 
         android:layout_width="fill_parent" android:layout_alignParentTop="true"
         android:background="@android:color/darker_gray">
-        <TextView android:id="@+id/match_select" android:textColor="@android:color/black" android:layout_centerVertical="true"   
-            android:textSize="20sp" android:text="筛选" android:layout_marginLeft="6.4dp"
-            android:layout_width="wrap_content" android:layout_height="wrap_content" 
-            android:layout_alignParentLeft="true"/>
         <RelativeLayout android:id="@+id/cust_title" android:layout_width="wrap_content" 
             android:layout_height="wrap_content" android:layout_centerInParent="true">
             <TextView  android:id="@+id/title_name"  android:textColor="@android:color/white"
@@ -40,13 +36,14 @@
         <RelativeLayout android:layout_height="fill_parent" android:layout_weight="4"
             android:layout_width="fill_parent">
 	        <ListView android:id="@+id/match_date" android:scrollbars="none"
-	            android:layout_width="fill_parent" android:layout_height="fill_parent">
+	            android:layout_width="fill_parent" android:layout_height="fill_parent" android:cacheColorHint="#00000000" 
+	    	 	android:listSelector="@android:color/transparent" >
 	        </ListView>
         </RelativeLayout>
         <RelativeLayout android:layout_height="fill_parent" android:layout_weight="1"
             android:layout_width="fill_parent"  android:background="@android:color/white">
 	        <ListView android:id="@+id/match_list"
-	            android:layout_width="fill_parent" android:layout_height="fill_parent" >
+	            android:layout_width="fill_parent" android:layout_height="fill_parent" android:cacheColorHint="#00000000">
 	        </ListView>
 	         <ProgressBar
 			  android:layout_width="wrap_content"

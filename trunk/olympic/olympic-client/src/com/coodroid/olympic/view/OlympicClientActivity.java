@@ -1,9 +1,5 @@
 package com.coodroid.olympic.view;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.app.ActivityGroup;
 import android.content.Intent;
@@ -18,10 +14,16 @@ import com.coodroid.olympic.R;
 import com.coodroid.olympic.common.Constants;
 import com.coodroid.olympic.common.DBHelper;
 import com.coodroid.olympic.common.Global;
-import com.coodroid.olympic.common.HttpRequest;
-import com.coodroid.olympic.common.LogUtil;
 
 public class OlympicClientActivity extends ActivityGroup {
+	
+	public static final int MEDAL_ONCLICKED=1;
+	public static final int MATCH_ONCLICKED=2;
+	public static final int LIVE_ONCLICKED=3;
+	public static final int GUESS_ONCLICKED=4;
+	public static final int MORE_ONCLICKED=5;
+	public static int onClicked = MEDAL_ONCLICKED;
+	
 	private Global global;
 	private LinearLayout container = null;
 	private RelativeLayout medalBtn = null;
@@ -62,10 +64,51 @@ public class OlympicClientActivity extends ActivityGroup {
      *默认奖牌榜作为初始化显示 
      */
     private void showDefaultActivity(){
+    	container.removeAllViews();
 		container.addView(OlympicClientActivity.this.
 				getLocalActivityManager().startActivity("MedalActivity", 
-						new Intent(OlympicClientActivity.this,MedalActivity.class))
+						new Intent(OlympicClientActivity.this,MedalActivity.class).
+						addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))								
 						.getDecorView());
+//    	switch(onClicked){
+//	    	case MEDAL_ONCLICKED:
+//	    		container.removeAllViews();
+//				container.addView(OlympicClientActivity.this.
+//						getLocalActivityManager().startActivity("MedalActivity", 
+//								new Intent(OlympicClientActivity.this,MedalActivity.class).
+//								addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))								
+//								.getDecorView());
+//				break;
+//	    	case MATCH_ONCLICKED:
+//	    		container.removeAllViews();
+//				container.addView(OlympicClientActivity.this.
+//						getLocalActivityManager().startActivity("MatchActivity", 
+//								new Intent(OlympicClientActivity.this,MatchActivity.class)
+//								.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+//								.getDecorView());
+//	    		break;
+//	      	case LIVE_ONCLICKED:
+//	      		container.removeAllViews();
+//				container.addView(OlympicClientActivity.this.
+//						getLocalActivityManager().startActivity("LiveActivity", 
+//								new Intent(OlympicClientActivity.this,LiveActivity.class))
+//								.getDecorView());
+//	    		break;
+//	      	case GUESS_ONCLICKED:
+//	      		container.removeAllViews();
+//				container.addView(OlympicClientActivity.this.
+//						getLocalActivityManager().startActivity("GuessActivity", 
+//								new Intent(OlympicClientActivity.this,GuessActivity.class))
+//								.getDecorView());
+//	    		break;
+//	      	case MORE_ONCLICKED:
+//	      		container.removeAllViews();
+//				container.addView(OlympicClientActivity.this.
+//						getLocalActivityManager().startActivity("MoreActivity", 
+//								new Intent(OlympicClientActivity.this,UserRankActivity.class))
+//								.getDecorView());
+//	    		break;
+//    	}
     } 
     
     /**
@@ -88,12 +131,15 @@ public class OlympicClientActivity extends ActivityGroup {
     	medalBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				container.removeAllViews();
-				container.addView(OlympicClientActivity.this.
-						getLocalActivityManager().startActivity("MedalActivity", 
-								new Intent(OlympicClientActivity.this,MedalActivity.class).
-								addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))								
-								.getDecorView());
+				if(onClicked!=MEDAL_ONCLICKED){
+					onClicked = MEDAL_ONCLICKED;
+					container.removeAllViews();
+					container.addView(OlympicClientActivity.this.
+							getLocalActivityManager().startActivity("MedalActivity", 
+									new Intent(OlympicClientActivity.this,MedalActivity.class).
+									addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))								
+									.getDecorView());
+				}
 			}
 		});
     	
@@ -101,13 +147,15 @@ public class OlympicClientActivity extends ActivityGroup {
     	matchBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				container.removeAllViews();
-				LogUtil.i("Match is onclick");
-				container.addView(OlympicClientActivity.this.
-						getLocalActivityManager().startActivity("MatchActivity", 
-								new Intent(OlympicClientActivity.this,MatchActivity.class)
-								.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-								.getDecorView());
+				if(onClicked!=MATCH_ONCLICKED){
+					onClicked = MATCH_ONCLICKED;
+					container.removeAllViews();
+					container.addView(OlympicClientActivity.this.
+							getLocalActivityManager().startActivity("MatchActivity", 
+									new Intent(OlympicClientActivity.this,MatchActivity.class)
+									.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+									.getDecorView());
+				}
 			}
 		});
     	
@@ -115,11 +163,14 @@ public class OlympicClientActivity extends ActivityGroup {
     	liveBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				container.removeAllViews();
-				container.addView(OlympicClientActivity.this.
-						getLocalActivityManager().startActivity("LiveActivity", 
-								new Intent(OlympicClientActivity.this,LiveActivity.class))
-								.getDecorView());
+				if(onClicked!=LIVE_ONCLICKED){
+					onClicked = LIVE_ONCLICKED;
+					container.removeAllViews();
+					container.addView(OlympicClientActivity.this.
+							getLocalActivityManager().startActivity("LiveActivity", 
+									new Intent(OlympicClientActivity.this,LiveActivity.class))
+									.getDecorView());
+				}
 			}
 		});
     	
@@ -127,11 +178,14 @@ public class OlympicClientActivity extends ActivityGroup {
     	guessBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				container.removeAllViews();
-				container.addView(OlympicClientActivity.this.
-						getLocalActivityManager().startActivity("GuessActivity", 
-								new Intent(OlympicClientActivity.this,GuessActivity.class))
-								.getDecorView());
+				if(onClicked!=GUESS_ONCLICKED){
+					onClicked = GUESS_ONCLICKED;
+					container.removeAllViews();
+					container.addView(OlympicClientActivity.this.
+							getLocalActivityManager().startActivity("GuessActivity", 
+									new Intent(OlympicClientActivity.this,GuessActivity.class))
+									.getDecorView());
+				}
 			}
 		});
     	
@@ -139,11 +193,14 @@ public class OlympicClientActivity extends ActivityGroup {
     	moreBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				container.removeAllViews();
-				container.addView(OlympicClientActivity.this.
-						getLocalActivityManager().startActivity("MoreActivity", 
-								new Intent(OlympicClientActivity.this,MoreActivity.class))
-								.getDecorView());
+				if(onClicked!=MORE_ONCLICKED){
+					onClicked = MORE_ONCLICKED;
+					container.removeAllViews();
+					container.addView(OlympicClientActivity.this.
+							getLocalActivityManager().startActivity("MoreActivity", 
+									new Intent(OlympicClientActivity.this,MoreActivity.class))
+									.getDecorView());
+				}
 			}
 		});
     }
@@ -155,26 +212,26 @@ public class OlympicClientActivity extends ActivityGroup {
     
     
     
-    public void getData(){
-    	try {
-			Map<String, String> params = new HashMap<String, String>();
-//			params.put("p1", "0");
-//			params.put("l", "10");
-//			params.put("v","0");
-			HttpRequest request=new HttpRequest();
-			String data=request
-					.setConnectionTimeout(3000)
-					.setRetryCount(0)
-					.setCookieStore(global.cookieStore)
-					.setUrl(Constants.url.api.match)
-					.setMethod(HttpRequest.METHOD_GET)
-					.setParams(params)
-					.setCharset("utf-8")
-					.getContent();
-		} catch (MalformedURLException e) {
-			LogUtil.e(e);
-		} catch (IOException e) {
-			LogUtil.e(e);
-		}
-    }
+//    public void getData(){
+//    	try {
+//			Map<String, String> params = new HashMap<String, String>();
+////			params.put("p1", "0");
+////			params.put("l", "10");
+////			params.put("v","0");
+//			HttpRequest request=new HttpRequest();
+//			String data=request
+//					.setConnectionTimeout(3000)
+//					.setRetryCount(0)
+//					.setCookieStore(global.cookieStore)
+//					.setUrl(Constants.url.api.match)
+//					.setMethod(HttpRequest.METHOD_GET)
+//					.setParams(params)
+//					.setCharset("utf-8")
+//					.getContent();
+//		} catch (MalformedURLException e) {
+//			LogUtil.e(e);
+//		} catch (IOException e) {
+//			LogUtil.e(e);
+//		}
+//    }
 }

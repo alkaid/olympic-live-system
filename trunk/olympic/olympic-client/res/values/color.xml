@@ -4,4 +4,5 @@
     <color name="live_noselect_color">#F4F4F4</color>
     <color name="text_live_bg">#FFFFFF</color>
     <color name="text_live_style">#000000</color>
+    <color name="press">#F4A460</color>
 </resources>

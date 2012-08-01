@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.coodroid.olympic.R;
 import com.coodroid.olympic.common.Constants;
 import com.coodroid.olympic.common.HttpRequest;
@@ -74,7 +74,7 @@ public class LiveActivity extends BaseActivity{
 	/**做match表的操作类*/
 	private MatchDBDAO db;
 	/**用于保存需要查看所对应的日期*/
-	private String OPERATED_DATE;
+	private String operatorDate;
 	/**这个List用于保存直播中有文字直播的比赛*/
 	private List<Match> livingHasTextLiveMatchs;
 	/**这个List用于保存即将直播有文字直播的比赛*/
@@ -108,9 +108,8 @@ public class LiveActivity extends BaseActivity{
 	private ProgressBar liveProgressBar;
 
 	public LiveActivity() {
-		OPERATED_DATE=SystemUtil.getCurrentDate();
+		operatorDate=SystemUtil.getCurrentDate();
 	}
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -120,7 +119,6 @@ public class LiveActivity extends BaseActivity{
 		tagListen();
 		
 	}
-	
 	private void init(){
 		container=(LinearLayout)((ActivityGroup)getParent()).getWindow().findViewById(R.id.containerBody);//注意这里，还是获取group的view
 		liveSortList = (ListView) findViewById(R.id.living_list);
@@ -192,17 +190,54 @@ public class LiveActivity extends BaseActivity{
 			}
 			
 		});
+		lastDateBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+//				if(operatorDate!=null&&operatorDate.compareTo(SystemUtil.getCurrentDate())>0){
+				try {	
+						 SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");					
+						 Date date = fmt.parse(operatorDate);
+						 Calendar calendar = Calendar.getInstance();     
+						 calendar.setTime(date);  
+						 calendar.set(Calendar.DAY_OF_YEAR,calendar.get(Calendar.DAY_OF_YEAR) - 1);
+						 operatorDate = fmt.format(calendar.getTime());
+						 refresh();
+					} catch (ParseException e) {
+						LogUtil.e(e);
+					}
+				}
+//			}
+		});
+		nextDateBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(operatorDate!=null){
+				try {
+						 SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");					
+						 Date date = fmt.parse(operatorDate);
+						 Calendar calendar = Calendar.getInstance();     
+						 calendar.setTime(date);  
+						 calendar.set(Calendar.DAY_OF_YEAR,calendar.get(Calendar.DAY_OF_YEAR) + 1);
+						 operatorDate = fmt.format(calendar.getTime());
+						 refresh();
+					} catch (ParseException e) {
+						LogUtil.e(e);
+					}
+				}
+			}
+		});
 	}
 	
 	private void refresh(){
 		refreshImg.setVisibility(View.GONE);
 		liveProgressBar.setVisibility(View.VISIBLE);
-		liveSortList.setVisibility(View.GONE);
-		liveSortTitle.setVisibility(View.GONE);
+//		liveSortList.setVisibility(View.GONE);
+//		liveSortTitle.setVisibility(View.GONE);
+//		liveDate.setVisibility(View.GONE);
+//		lastDateBtn.setVisibility(View.GONE);
+//		nextDateBtn.setVisibility(View.GONE);
 		new matchMsgAsyncTask().execute(null);
 	}
-	
-	
 	
 	/**
 	 * 加载数据，分别设置需要的比赛日的即将比赛，正在直播的比赛，已经比赛完的比赛信息
@@ -210,11 +245,11 @@ public class LiveActivity extends BaseActivity{
 	private void loadData(){
 		if(SystemUtil.checkNet(this)){
 			ArrayList<Match> matchs = null;
-			if(OPERATED_DATE.compareTo(MATCH_FIRST_DATE)<0){
+			if(operatorDate.compareTo(MATCH_FIRST_DATE)<0){
 				matchs = (ArrayList<Match>)analyze(getServerData(MATCH_FIRST_DATE));
-				OPERATED_DATE = MATCH_FIRST_DATE;
+				operatorDate = MATCH_FIRST_DATE;
 			}else{
-				matchs = (ArrayList<Match>)analyze(getServerData(OPERATED_DATE));
+				matchs = (ArrayList<Match>)analyze(getServerData(operatorDate));
 			}
 			if(matchs!=null){
 				for(Match match:matchs){
@@ -226,7 +261,7 @@ public class LiveActivity extends BaseActivity{
 		willLiveHasTextLiveMatchs.clear();
 		liveEndHasTextLiveMatchs.clear();
 		livingHasVideoLiveMatchs.clear();
-		Cursor c = db.query(OPERATED_DATE);
+		Cursor c = db.query(operatorDate);
 		if(c.moveToFirst()){
 			do{					
 				Match m = new Match(c.getInt(0));
@@ -238,7 +273,7 @@ public class LiveActivity extends BaseActivity{
 				m.setName(c.getString(6));
 				m.setHasVideoLive(c.getInt(9));
 				m.setHasTextLive(c.getInt(8));
-				LogUtil.v("MAOXIA", m.getBjDate()+"   "+m.getBjTime()+"   "+m.getName());
+//				LogUtil.v("MAOXIA", m.getBjDate()+"   "+m.getBjTime()+"   "+m.getName());
 				String matchDatetime = c.getString(1)+" "+c.getString(2);
 				String curDatetime = SystemUtil.getCurrentDate()+" "+SystemUtil.getCurrentTime();
 				long timeInterval = compareDatetime(matchDatetime, curDatetime);
@@ -365,26 +400,22 @@ public class LiveActivity extends BaseActivity{
 		@Override
 		protected Void doInBackground(Void... params) {
 			loadData();
-			lastDateBtn.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-//					OPERATED_DATE.substring()
-				}
-			});
 			return null;
 		}
 		
 		@Override
 		protected void onPostExecute(Void result) {
-			liveDate.setText(OPERATED_DATE);
+//			liveDate.setVisibility(View.VISIBLE);
+			liveDate.setText("比赛日:"+operatorDate);
 			updateLiveContent(liveTypeSelect,liveSortSelect);
-			liveSortTitle.setVisibility(View.VISIBLE);
-			liveSortList.setVisibility(View.VISIBLE);
+			liveSortTitle.setBackgroundResource(R.color.live_select_color);
+//			liveSortTitle.setVisibility(View.VISIBLE);
+//			liveSortList.setVisibility(View.VISIBLE);
 			liveProgressBar.setVisibility(View.GONE);
 			refreshImg.setVisibility(View.VISIBLE);
-			
+			lastDateBtn.setVisibility(View.VISIBLE);
+			nextDateBtn.setVisibility(View.VISIBLE);
 		}
-		
 	} 
 	
 	/**

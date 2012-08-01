@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/user_rank_item"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <TextView
+        android:id="@+id/user_rank_unick" 
+        android:layout_width="80dp" 
+        android:layout_height="30dp" 
+        android:gravity="center_horizontal" 
+        android:textSize="20sp" /> 
+    <TextView 
+        android:id="@+id/user_rank_questionScore"
+        android:layout_width="80dp" 
+        android:layout_height="30dp" 
+        android:gravity="center_horizontal" 
+        android:textSize="20sp" /> 
+    <TextView 
+        android:id="@+id/user_rank_rank"
+        android:layout_width="80dp" 
+        android:layout_height="30dp" 
+        android:gravity="center_horizontal" 
+        android:textSize="20sp" /> 
+</LinearLayout>

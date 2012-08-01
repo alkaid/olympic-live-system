@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+   	<RelativeLayout android:id="@+id/user_rank_title" android:layout_height="wrap_content" 
+        android:layout_width="fill_parent" android:layout_alignParentTop="true"
+        android:background="@android:color/darker_gray">
+        <TextView android:id="@+id/user_rank_back" android:textColor="@android:color/black" android:layout_centerVertical="true"   
+            android:textSize="20sp" android:text="返回" android:layout_marginLeft="6.4dp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" 
+            android:layout_alignParentLeft="true"/>
+        <TextView android:id="@+id/cust_title" android:textColor="@android:color/white"
+            android:textSize="28sp" android:text="积分排名" 
+            android:layout_width="wrap_content" android:layout_height="wrap_content" 
+            android:layout_centerInParent="true"/>
+         <ImageView android:id="@+id/refresh_btn" android:src="@drawable/refresh" android:layout_marginRight="6.4dp"
+	            android:layout_width="wrap_content" android:layout_height="wrap_content" 
+	            android:layout_alignParentRight="true"   android:layout_centerVertical="true"/>
+	      <ProgressBar android:layout_width="wrap_content"
+				  android:layout_height="wrap_content"
+				  style="?android:attr/progressBarStyleSmall"
+				  android:id="@+id/userAnswersProcessBar"
+				  android:layout_centerVertical="true"
+				  android:layout_marginRight="6.4dp"
+				  android:layout_alignParentRight="true"			  
+				  android:visibility="gone"/>
+    </RelativeLayout>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/user_rank_list_title" 
+	    android:layout_below="@id/user_rank_title"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal"
+		android:layout_marginTop="20dp"
+		android:layout_marginLeft="40dp"
+		android:layout_marginRight="40dp"> 
+        <TextView 
+            android:layout_width="80dp" 
+            android:layout_height="30dp" 
+            android:gravity="center_horizontal" 
+            android:text="用户名" 
+            android:textSize="20sp" /> 
+        <TextView 
+            android:layout_width="80dp" 
+            android:layout_height="30dp" 
+            android:gravity="center_horizontal" 
+            android:text="积分" 
+            android:textSize="20sp" /> 
+        <TextView 
+            android:layout_width="80dp" 
+            android:layout_height="30dp" 
+            android:gravity="center_horizontal" 
+            android:text="排名" 
+            android:textSize="20sp" /> 
+    </LinearLayout>
+    <RelativeLayout android:id="@+id/user_rank_list_layout" 
+        android:layout_height="wrap_content" android:layout_width="fill_parent"  
+        android:layout_below="@id/user_rank_list_title" android:layout_marginLeft="40dp"
+		android:layout_marginRight="40dp">
+	    <ListView android:id="@+id/user_rank_list"
+	       android:layout_width="fill_parent" android:layout_height="wrap_content"
+	       android:scrollbars="vertical" android:cacheColorHint="#00000000"> 
+	    </ListView> 
+    </RelativeLayout>
+   	<LinearLayout android:id="@+id/local_user_rank" 
+	    android:layout_below="@id/user_rank_list_layout"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content" 
+		android:layout_marginTop="20dp"
+		android:layout_marginLeft="40dp"
+		android:layout_marginRight="40dp"> 
+   	</LinearLayout>
+    
+</RelativeLayout>
