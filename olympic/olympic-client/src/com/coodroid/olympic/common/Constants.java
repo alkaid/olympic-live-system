@@ -25,6 +25,9 @@ public class Constants {
 			public static final String guessSubmit=user_root+"guess/answer";
 			public static final String userPoint=user_root+"guess/points";
 		}
+		public static class file{
+			public static final String about="about.dat";
+		}
 	}
 	public static class bundleKey{
 		/**正在直播的比赛的信息*/

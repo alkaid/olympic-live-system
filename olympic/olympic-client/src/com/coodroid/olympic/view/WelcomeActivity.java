@@ -16,6 +16,10 @@ import com.coodroid.olympic.R;
 import com.coodroid.olympic.common.Global;
 import com.coodroid.olympic.common.LogUtil;
 import com.coodroid.olympic.model.User;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.fb.NotificationType;
+import com.umeng.fb.UMFeedbackService;
+import com.umeng.update.UmengUpdateAgent;
 
 public class WelcomeActivity extends BaseActivity{
 	/** 欢迎界面显示时间 */
@@ -26,11 +30,11 @@ public class WelcomeActivity extends BaseActivity{
 		needInitApp=false;
 		super.onCreate(savedInstanceState);
 		//友盟错误报告
-//		MobclickAgent.onError(this);
+		MobclickAgent.onError(this);
 		//友盟以通知栏为反馈的形式
-//		UMFeedbackService.enableNewReplyNotification(this, NotificationType.NotificationBar);
-//		//友盟自动更新
-//		UmengUpdateAgent.update(this);
+		UMFeedbackService.enableNewReplyNotification(this, NotificationType.NotificationBar);
+		//友盟自动更新
+		UmengUpdateAgent.update(this);
 		//全屏
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   

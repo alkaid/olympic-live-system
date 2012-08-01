@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-public class NewsActivity extends Activity{
+public class NewsActivity extends BaseActivity{
 	
 	private WebView news;
 	

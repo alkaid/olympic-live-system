@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.coodroid.olympic.common.Global;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * 所有Activity的基类 统一菜单栏
@@ -38,13 +39,13 @@ public abstract class BaseActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-//		MobclickAgent.onResume(context);
+		MobclickAgent.onResume(context);
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
-//		MobclickAgent.onPause(context);
+		MobclickAgent.onPause(context);
 	}
 	
 }
