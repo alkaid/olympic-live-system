@@ -36,8 +36,30 @@
         <activity android:name=".view.TextLiveActivity" android:launchMode="singleInstance"/>
         <activity android:name=".view.UserAnswersActivity" android:launchMode="singleInstance"/>
         <activity android:name=".view.UserRankActivity" android:launchMode="singleInstance"/>
-         <activity android:name=".view.NewsActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".view.NewsActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".view.AboutActivity" android:launchMode="singleInstance"/>
+ 		
+       	<!--友盟FeedBack  -->
+		<activity android:name="com.umeng.fb.ui.SendFeedback"
+    			  android:windowSoftInputMode="adjustResize" />
+		<activity android:name="com.umeng.fb.ui.FeedbackConversations" />
+		<activity android:name="com.umeng.fb.ui.FeedbackConversation"
+   				  android:configChanges="keyboard" />
+		<!-- 友盟自动更新service -->
+		<service
+		    android:name="com.umeng.common.net.DownloadingService"
+		    android:exported="true"
+		    android:process=":DownloadingService" >
+		</service>
+        <!-- 友盟Appkey -->
+        <meta-data android:value="501924d05270153d08000002" android:name="UMENG_APPKEY"/> 
     </application>
+    
+    <!-- 基本权限 -->
 	<uses-permission android:name="android.permission.INTERNET" />    
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	<uses-permission android:name="android.permission.READ_LOGS"/>
+   
 </manifest>
